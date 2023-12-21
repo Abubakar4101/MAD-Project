@@ -1,0 +1,109 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/SF-Compact-Display-Bold.ttf",
+      "sha1": "f87f00122589d2882452c53f41dda90cd09c273f"
+    },
+    {
+      "path": "assets/fonts/SF-Compact-Display-Medium.ttf",
+      "sha1": "33d432ca2209e8490773a924f8fee64465f1d770"
+    },
+    {
+      "path": "assets/fonts/SF-Compact-Display-Regular.ttf",
+      "sha1": "2c8c54e6ecab017bb7b0f1765ac45ed6ccb98025"
+    },
+    {
+      "path": "assets/fonts/SF-Compact-Display-Semibold.ttf",
+      "sha1": "41cdf8b2519c868922abe0f42b8367fe9d83b1f1"
+    },
+    {
+      "path": "assets/images/app_icon.png",
+      "sha1": "082ddeeaf1b1f32ed07d4c203add4936bef1a550"
+    },
+    {
+      "path": "assets/images/icons/adobe_logo.png",
+      "sha1": "0c81e716919ccba412c1eeb0c31f8ed9d44c34cd"
+    },
+    {
+      "path": "assets/images/icons/adobexd_logo.png",
+      "sha1": "303515553eda26313feb92a24102f68fc96fd227"
+    },
+    {
+      "path": "assets/images/icons/figma_logo.png",
+      "sha1": "9f17bc4ae8de3aa50f1e4e8b5d968feafc1638e4"
+    },
+    {
+      "path": "assets/images/icons/notification.png",
+      "sha1": "233072c23ca49d3dd3dda2419f95369d2b114abb"
+    },
+    {
+      "path": "assets/images/icons/pdf_logo.png",
+      "sha1": "38e5b84980736249931d833c4a9bea5f264c879c"
+    },
+    {
+      "path": "assets/images/icons/photoshop_logo.png",
+      "sha1": "93ca9ae248ffbd4750617d05df3fa4d7bd94a4fe"
+    },
+    {
+      "path": "assets/images/icons/success.png",
+      "sha1": "14eaaf1c136b67def83ebe584f14a3718772fe0e"
+    },
+    {
+      "path": "assets/images/jobs/job1.png",
+      "sha1": "f065448e82eb5ab2bfc2d065057d55b832f9eb6a"
+    },
+    {
+      "path": "assets/images/jobs/job2.png",
+      "sha1": "8af89d3c2220baecae2d4c00ba1f1b5a3d346e99"
+    },
+    {
+      "path": "assets/images/jobs/job3.png",
+      "sha1": "1cb7e0539d8a649574c0bbfe356d2c00bc535f31"
+    },
+    {
+      "path": "assets/images/jobs/job4.png",
+      "sha1": "bed200819bc1874375bfbadbf90fd791195820b7"
+    },
+    {
+      "path": "assets/images/jobs/job5.png",
+      "sha1": "fa1a107db1edabbb3312b84992362b2f7a9b30a9"
+    },
+    {
+      "path": "assets/images/jobs/job6.png",
+      "sha1": "9df0293e7bfd7ad9276e4d3d434bea7838981d6d"
+    },
+    {
+      "path": "assets/images/jobs/job7.png",
+      "sha1": "ffaf6fd79d2ca8fa62c607f3f1bdd72c74cc043d"
+    },
+    {
+      "path": "assets/images/onboarding/onboarding1.png",
+      "sha1": "d8a54b170a08046361df7b7d1580c4ee6dba3411"
+    },
+    {
+      "path": "assets/images/onboarding/onboarding2.png",
+      "sha1": "1fd33c983cdd8087ada5da715a220d7e7415b71e"
+    },
+    {
+      "path": "assets/images/onboarding/onboarding3.png",
+      "sha1": "1b110819cfe81077c8553269b6d1b5e8382252ce"
+    },
+    {
+      "path": "assets/images/onboarding_bg.png",
+      "sha1": "8beefac12d8877d98f73266ad0b2c70dd8ef1e0a"
+    },
+    {
+      "path": "assets/images/university1.png",
+      "sha1": "f2e2fa0d76d35d2d9523e78b9994baffaca68ffd"
+    },
+    {
+      "path": "assets/images/users/user1.jpeg",
+      "sha1": "2d372f585d675a9380b27b34968be21493e4e4ca"
+    },
+    {
+      "path": "assets/images/users/user2.png",
+      "sha1": "3d61f548257c52522e5613a2e318dca2106456d0"
+    }
+  ]
+}
