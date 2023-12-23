@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  RefreshControl
+  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import {Colors, Fonts, Sizes, screenWidth} from '../../constants/styles';
@@ -14,18 +14,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {Text} from '../../components/commonText';
+import {getJobTypes} from '../../services/openAi';
 import {Snackbar} from 'react-native-paper';
 import MyStatusBar from '../../components/myStatusBar';
 import axios from 'axios';
-
-const jobsTypesList = [
-  'All Job',
-  'Writer',
-  'Design',
-  'Finance',
-  'Product Designer',
-  'Data Engineer',
-];
 
 const apiUrl = 'https://jsearch.p.rapidapi.com/search';
 
@@ -34,13 +26,15 @@ const headers = {
   'X-RapidAPI-Host': 'jsearch.p.rapidapi.com',
 };
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const [selectedJobTypeIndex, setselectedJobTypeIndex] = useState(0);
   const [jobData, setjobData] = useState([]);
   const [showSnackBar, setshowSnackBar] = useState(false);
   const [snackBarMsg, setsnackBarMsg] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [jobsTypesList, setJobsTypesList] = useState([]);
+
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -49,6 +43,13 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    fetchJobData();
+  }, [onRefresh]);
+
+  useEffect(() => {
+    getJobTypes().then((jobTypes) => {
+      setJobsTypesList(jobTypes);
+    });
     fetchJobData();
   }, [onRefresh]);
 
@@ -63,7 +64,6 @@ const HomeScreen = ({ navigation }) => {
         },
         headers: headers,
       });
-      console.log(response.data.data);
       setjobData(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -73,10 +73,14 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const updateJobData = ({ id }) => {
-    const updatedData = jobData.map((item) => {
+  const updateJobData = ({id}) => {
+    const updatedData = jobData.map(item => {
       if (item.job_id === id) {
-        setsnackBarMsg(item.job_apply_is_direct ? 'Removed from Bookmark' : 'Added to Bookmark');
+        setsnackBarMsg(
+          item.job_apply_is_direct
+            ? 'Removed from Bookmark'
+            : 'Added to Bookmark',
+        );
         setshowSnackBar(true);
         return {
           ...item,
@@ -90,15 +94,14 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
       <MyStatusBar />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
+          }>
           {header()}
           {searchField()}
           {banner()}
@@ -109,70 +112,81 @@ const HomeScreen = ({ navigation }) => {
               <ActivityIndicator size="large" color={Colors.primaryColor} />
             </View>
           ) : (
-            console.log(typeof jobData) || (
             <FlatList
-              keyExtractor={(item) => item.job_id}
+              keyExtractor={item => item.job_id}
               data={jobData}
               scrollEnabled={false}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  key={item.job_id}
-                  activeOpacity={0.7}
-                  onPress={() => {
-                    navigation.push('JobDetail');
-                  }}
-                  style={styles.jobWrapStyle}
-                >
-                  <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <Image source={{ uri: item.employer_logo }} style={styles.sourceLogoStyle} />
-                    <View style={{ flex: 1, marginLeft: Sizes.fixPadding }}>
-                      <Text numberOfLines={1} style={{ ...Fonts.blackColor18SemiBold }}>
-                        {item.job_title}
-                      </Text>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          ...Fonts.blackColor15Regular,
-                          marginBottom: Sizes.fixPadding - 8.0,
-                          marginTop: Sizes.fixPadding - 5.0,
-                        }}>
-                        {item.employer_name}
-                      </Text>
-                      <Text numberOfLines={1} style={{ ...Fonts.grayColor13Regular }}>
-                        {item.job_city}, {item.job_state} • {item.job_employment_type}
+              renderItem={({item}) =>
+                item.employer_logo && (
+                  <TouchableOpacity
+                    key={item.job_id}
+                    activeOpacity={0.7}
+                    onPress={() => {
+                      navigation.push('JobDetail');
+                    }}
+                    style={styles.jobWrapStyle}>
+                    <View style={{flexDirection: 'row', flex: 1}}>
+                      <Image
+                        source={{uri: item.employer_logo}}
+                        style={styles.sourceLogoStyle}
+                      />
+                      <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
+                        <Text
+                          numberOfLines={1}
+                          style={{...Fonts.blackColor18SemiBold}}>
+                          {item.job_title}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            ...Fonts.blackColor15Regular,
+                            marginBottom: Sizes.fixPadding - 8.0,
+                            marginTop: Sizes.fixPadding - 5.0,
+                          }}>
+                          {item.employer_name}
+                        </Text>
+                        <Text
+                          numberOfLines={1}
+                          style={{...Fonts.grayColor13Regular}}>
+                          {item.job_city}, {item.job_state} •{' '}
+                          {item.job_employment_type}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        height: 65.0,
+                        alignItems: 'flex-end',
+                        justifyContent: 'space-between',
+                      }}>
+                      <MaterialIcons
+                        name={
+                          item.job_apply_is_direct
+                            ? 'bookmark'
+                            : 'bookmark-border'
+                        }
+                        color={Colors.primaryColor}
+                        size={24}
+                        onPress={() => {
+                          updateJobData({id: item.job_id});
+                        }}
+                      />
+                      <Text style={{...Fonts.primaryColor16SemiBold}}>
+                        {item.job_min_salary
+                          ? `$${item.job_min_salary}/Mo`
+                          : 'Salary TBD'}
                       </Text>
                     </View>
-                  </View>
-                  <View
-                    style={{
-                      height: 65.0,
-                      alignItems: 'flex-end',
-                      justifyContent: 'space-between',
-                    }}>
-                    <MaterialIcons
-                      name={item.job_apply_is_direct ? 'bookmark' : 'bookmark-border'}
-                      color={Colors.primaryColor}
-                      size={24}
-                      onPress={() => {
-                        updateJobData({ id: item.job_id });
-                      }}
-                    />
-                    <Text style={{ ...Fonts.primaryColor16SemiBold }}>
-                      {item.job_min_salary ? `$${item.job_min_salary}/Mo` : 'Salary TBD'}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
+                  </TouchableOpacity>
+                )
+              }
             />
-            )
           )}
         </ScrollView>
       </View>
       {snackBarInfo()}
     </View>
   );
-
-
 
   function snackBarInfo() {
     return (
