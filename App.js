@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import BottomTabBarScreen from './components/bottomTabBarScreen';
-import {LogBox} from 'react-native';
+import { LogBox } from 'react-native';
 import SearchScreen from './screens/search/searchScreen';
 import AllJobsScreen from './screens/allJobs/allJobsScreen';
 import JobDetailScreen from './screens/jobDetail/jobDetailScreen';
@@ -36,7 +36,8 @@ function MyApp() {
         screenOptions={{
           headerShown: false,
           ...TransitionPresets.SlideFromRightIOS,
-        }}>
+        }}
+      >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Onboadring" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
@@ -45,7 +46,7 @@ function MyApp() {
         <Stack.Screen
           name="BottomTabBar"
           component={BottomTabBarScreen}
-          options={{...TransitionPresets.DefaultTransition}}
+          options={{ ...TransitionPresets.DefaultTransition }}
         />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen name="AllJobs" component={AllJobsScreen} />
@@ -58,7 +59,10 @@ function MyApp() {
         />
         <Stack.Screen name="EditAbout" component={EditAboutScreen} />
         <Stack.Screen name="AddSkills" component={AddSkillsScreen} />
-        <Stack.Screen name="EditExperience" component={EditExperienceScreen} />
+        <Stack.Screen
+          name="EditExperience"
+          component={EditExperienceScreen}
+        />
         <Stack.Screen name="EditEducation" component={EditEducationScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
