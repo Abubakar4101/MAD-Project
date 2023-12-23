@@ -111,12 +111,11 @@ const LoginScreen = ({navigation}) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          {socialMediaOptionSort({iconName: 'facebook', bgColor: '#3C5A9A'})}
-          {socialMediaOptionSort({iconName: 'twitter', bgColor: '#2DAAE1'})}
           {socialMediaOptionSort({
-            iconName: 'google-plus',
+            iconName: 'google',
             bgColor: '#DD4F43',
           })}
+          {socialMediaOptionSort({iconName: 'github', bgColor: '#000000'})}
         </View>
       </View>
     );
@@ -129,7 +128,7 @@ const LoginScreen = ({navigation}) => {
           backgroundColor: bgColor,
           ...styles.socialCircleStyle,
         }}>
-        <FontAwesome name={iconName} size={16} color={Colors.whiteColor} />
+        <FontAwesome name={iconName} size={30} color={Colors.whiteColor} />
       </View>
     );
   }
@@ -143,6 +142,11 @@ const LoginScreen = ({navigation}) => {
         }}
         style={{...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0}}>
         <Text style={{...Fonts.whiteColor18SemiBold}}>Login</Text>
+        <MaterialCommunityIcons
+          name="login"
+          size={30}
+          color={Colors.whiteColor}
+        />
       </TouchableOpacity>
     );
   }
@@ -163,6 +167,11 @@ const LoginScreen = ({navigation}) => {
             flexDirection: 'row',
             alignItems: 'center',
           }}>
+          <MaterialCommunityIcons
+            name="lock"
+            size={30}
+            color={Colors.primaryColor}
+          />
           <TextInput
             placeholder="Enter Password"
             placeholderTextColor={Colors.grayColor}
@@ -198,6 +207,11 @@ const LoginScreen = ({navigation}) => {
           <Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
+          <MaterialCommunityIcons
+            name="email"
+            size={30}
+            color={Colors.primaryColor}
+          />
           <TextInput
             placeholder="Enter Email"
             placeholderTextColor={Colors.grayColor}
@@ -215,7 +229,10 @@ const LoginScreen = ({navigation}) => {
   function title() {
     return (
       <Text style={{...Fonts.blackColor20Bold, textAlign: 'center'}}>
-        Login to your Account
+        Login to{' '}
+        <Text style={{...styles.appTitleTextStyle}}>
+          Career<Text style={{...Fonts.pinkColor20Bold}}>Sync</Text>
+        </Text>
       </Text>
     );
   }
@@ -231,15 +248,11 @@ const LoginScreen = ({navigation}) => {
         <Image
           source={require('../../assets/images/app_icon.png')}
           style={{
-            width: 50.0,
-            height: 50.0,
+            width: 100.0,
+            height: 100.0,
             resizeMode: 'contain',
           }}
         />
-        <Text style={{...styles.appNameTextStyle}}>
-          Job
-          <Text style={{...Fonts.pinkColor16Bold}}> Finder</Text>
-        </Text>
       </View>
     );
   }
@@ -274,9 +287,9 @@ const styles = StyleSheet.create({
     textDecorationColor: Colors.primaryColor,
   },
   socialCircleStyle: {
-    width: 36.0,
-    height: 36.0,
-    borderRadius: 18.0,
+    width: 50.0,
+    height: 50.0,
+    borderRadius: 30.0,
     marginHorizontal: Sizes.fixPadding - 3.0,
     alignItems: 'center',
     justifyContent: 'center',

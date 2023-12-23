@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* rnCLI_JobFinderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* rnCLI_JobFinderTests.m */; };
-		0396E7934BC0454E9D4C48BF /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E4B9EAAC0E84F929AAAB98F /* app_icon.png */; };
 		0691A94576504F2183541AF2 /* onboarding_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = BEB7A8BE960247D8813CDA8F /* onboarding_bg.png */; };
-		09451D6CA1C54015979755D3 /* SF-Compact-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F09B9CCB4CFC4815B39F924D /* SF-Compact-Display-Medium.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-rnCLI_JobFinder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-rnCLI_JobFinder.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -18,10 +16,8 @@
 		2379E0A2C2C14367A7605E65 /* pdf_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FD21CFDBD3C457481325CFA /* pdf_logo.png */; };
 		320F7F22A84548568CADE709 /* onboarding1.png in Resources */ = {isa = PBXBuildFile; fileRef = F131F7E42D33475AA6743599 /* onboarding1.png */; };
 		3445974473D04BFDB21D2C61 /* onboarding3.png in Resources */ = {isa = PBXBuildFile; fileRef = CDCB03024CCF410D8282155F /* onboarding3.png */; };
-		4BAF9E4F42E347ACB945C040 /* SF-Compact-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EB96FE42F55B452B913CC9F2 /* SF-Compact-Display-Bold.ttf */; };
 		5D62BB248EC3427287E6958D /* user1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 65E4DD8F3FDD48AA997F3ABC /* user1.jpeg */; };
 		620B157D9EBC4CE498C8B302 /* user2.png in Resources */ = {isa = PBXBuildFile; fileRef = CBFAADF584FA456196BC6B3C /* user2.png */; };
-		73243CC14197442E915C8474 /* SF-Compact-Display-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD463F67DAB545CBBC4271B1 /* SF-Compact-Display-Semibold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-rnCLI_JobFinder-rnCLI_JobFinderTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-rnCLI_JobFinder-rnCLI_JobFinderTests.a */; };
 		7C139AC0008B4045A6C297F0 /* photoshop_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 420C68C7093E4EAE9A167425 /* photoshop_logo.png */; };
 		7EF477DE2AFB8347009AD7E9 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7EF477CB2AFB8347009AD7E9 /* Fontisto.ttf */; };
@@ -47,7 +43,6 @@
 		8B04C6488CE54274BF02BD2E /* adobexd_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = D556AAB0A3414F9492E20200 /* adobexd_logo.png */; };
 		92C62B1315E74AA1A6712440 /* job5.png in Resources */ = {isa = PBXBuildFile; fileRef = D30934A419354BFBA62BAF5D /* job5.png */; };
 		969490A4DC384026BE873857 /* figma_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = E87E1CC190B142CF958FD2DC /* figma_logo.png */; };
-		A0D1C49093F24C3390E74D6C /* SF-Compact-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FFB386D4E4A4D0DBD5B8135 /* SF-Compact-Display-Regular.ttf */; };
 		A15CDDA82A144940BAAF50AB /* notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 8DD4448507A04B76941385C2 /* notification.png */; };
 		AFA059A84BAF4D15BDEF5EF3 /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = 6B0B61A870CB4915A571550C /* success.png */; };
 		B4B61C294C844528A0253559 /* adobe_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = F522D047259347E784DA6020 /* adobe_logo.png */; };
@@ -59,6 +54,10 @@
 		E8129A9B033D47C1A25AA1D2 /* job7.png in Resources */ = {isa = PBXBuildFile; fileRef = A6F1AC96F7364BA8AF80F921 /* job7.png */; };
 		ED8898A69E8F4DFE97BE82A1 /* job2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9FD347EC20C340318EC618F0 /* job2.png */; };
 		FDEC06837258497C9960D824 /* job6.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0AAF6BDF6434B9B9A2652 /* job6.png */; };
+		03162EAAAEC44373B54A4AEA /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0911D550B1FE4C37A371DD81 /* app_icon.png */; };
+		AAEC262FEF284129929DBFFE /* SF-Compact-Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 755A29D4DB744AC2B0B50D61 /* SF-Compact-Display-Bold.ttf */; };
+		FD197F38E80945CC9B956A23 /* SF-Compact-Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28FA18F05D50456CB5699FE3 /* SF-Compact-Display-Medium.ttf */; };
+		2BC9255BB6C143F7AE95031E /* SF-Compact-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55A127D6F032449CAAF0FE67 /* SF-Compact-Display-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,7 +87,6 @@
 		5B7EB9410499542E8C5724F5 /* Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.debug.xcconfig"; path = "Target Support Files/Pods-rnCLI_JobFinder-rnCLI_JobFinderTests/Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-rnCLI_JobFinder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rnCLI_JobFinder.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FD21CFDBD3C457481325CFA /* pdf_logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = pdf_logo.png; path = ../assets/images/icons/pdf_logo.png; sourceTree = "<group>"; };
-		5FFB386D4E4A4D0DBD5B8135 /* SF-Compact-Display-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Compact-Display-Regular.ttf"; path = "../assets/fonts/SF-Compact-Display-Regular.ttf"; sourceTree = "<group>"; };
 		65E4DD8F3FDD48AA997F3ABC /* user1.jpeg */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = user1.jpeg; path = ../assets/images/users/user1.jpeg; sourceTree = "<group>"; };
 		6B0B61A870CB4915A571550C /* success.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = success.png; path = ../assets/images/icons/success.png; sourceTree = "<group>"; };
 		732CEFF52AF5468186EC5234 /* onboarding2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = onboarding2.png; path = ../assets/images/onboarding/onboarding2.png; sourceTree = "<group>"; };
@@ -116,7 +114,6 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.release.xcconfig"; path = "Target Support Files/Pods-rnCLI_JobFinder-rnCLI_JobFinderTests/Pods-rnCLI_JobFinder-rnCLI_JobFinderTests.release.xcconfig"; sourceTree = "<group>"; };
 		8DD4448507A04B76941385C2 /* notification.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = notification.png; path = ../assets/images/icons/notification.png; sourceTree = "<group>"; };
 		947AF960988F4C1EA0894869 /* job1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job1.png; path = ../assets/images/jobs/job1.png; sourceTree = "<group>"; };
-		9E4B9EAAC0E84F929AAAB98F /* app_icon.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = app_icon.png; path = ../assets/images/app_icon.png; sourceTree = "<group>"; };
 		9FD347EC20C340318EC618F0 /* job2.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job2.png; path = ../assets/images/jobs/job2.png; sourceTree = "<group>"; };
 		A6F1AC96F7364BA8AF80F921 /* job7.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job7.png; path = ../assets/images/jobs/job7.png; sourceTree = "<group>"; };
 		BE2D11A18C4045AE8593180F /* job3.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job3.png; path = ../assets/images/jobs/job3.png; sourceTree = "<group>"; };
@@ -126,14 +123,15 @@
 		D30934A419354BFBA62BAF5D /* job5.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job5.png; path = ../assets/images/jobs/job5.png; sourceTree = "<group>"; };
 		D556AAB0A3414F9492E20200 /* adobexd_logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = adobexd_logo.png; path = ../assets/images/icons/adobexd_logo.png; sourceTree = "<group>"; };
 		DB2BA66E60F942D9B5D2FBF1 /* university1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = university1.png; path = ../assets/images/university1.png; sourceTree = "<group>"; };
-		DD463F67DAB545CBBC4271B1 /* SF-Compact-Display-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Compact-Display-Semibold.ttf"; path = "../assets/fonts/SF-Compact-Display-Semibold.ttf"; sourceTree = "<group>"; };
 		E87E1CC190B142CF958FD2DC /* figma_logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = figma_logo.png; path = ../assets/images/icons/figma_logo.png; sourceTree = "<group>"; };
-		EB96FE42F55B452B913CC9F2 /* SF-Compact-Display-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Compact-Display-Bold.ttf"; path = "../assets/fonts/SF-Compact-Display-Bold.ttf"; sourceTree = "<group>"; };
 		ECA25D55C10E45A4A164E327 /* job4.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = job4.png; path = ../assets/images/jobs/job4.png; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F09B9CCB4CFC4815B39F924D /* SF-Compact-Display-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-Compact-Display-Medium.ttf"; path = "../assets/fonts/SF-Compact-Display-Medium.ttf"; sourceTree = "<group>"; };
 		F131F7E42D33475AA6743599 /* onboarding1.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = onboarding1.png; path = ../assets/images/onboarding/onboarding1.png; sourceTree = "<group>"; };
 		F522D047259347E784DA6020 /* adobe_logo.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = adobe_logo.png; path = ../assets/images/icons/adobe_logo.png; sourceTree = "<group>"; };
+		0911D550B1FE4C37A371DD81 /* app_icon.png */ = {isa = PBXFileReference; name = "app_icon.png"; path = "../assets/images/app_icon.png"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		755A29D4DB744AC2B0B50D61 /* SF-Compact-Display-Bold.ttf */ = {isa = PBXFileReference; name = "SF-Compact-Display-Bold.ttf"; path = "../assets/fonts/SF-Compact-Display-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		28FA18F05D50456CB5699FE3 /* SF-Compact-Display-Medium.ttf */ = {isa = PBXFileReference; name = "SF-Compact-Display-Medium.ttf"; path = "../assets/fonts/SF-Compact-Display-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		55A127D6F032449CAAF0FE67 /* SF-Compact-Display-Regular.ttf */ = {isa = PBXFileReference; name = "SF-Compact-Display-Regular.ttf"; path = "../assets/fonts/SF-Compact-Display-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,11 +174,6 @@
 		00FABAA7B4A144DCB7335A7F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EB96FE42F55B452B913CC9F2 /* SF-Compact-Display-Bold.ttf */,
-				F09B9CCB4CFC4815B39F924D /* SF-Compact-Display-Medium.ttf */,
-				5FFB386D4E4A4D0DBD5B8135 /* SF-Compact-Display-Regular.ttf */,
-				DD463F67DAB545CBBC4271B1 /* SF-Compact-Display-Semibold.ttf */,
-				9E4B9EAAC0E84F929AAAB98F /* app_icon.png */,
 				F522D047259347E784DA6020 /* adobe_logo.png */,
 				D556AAB0A3414F9492E20200 /* adobexd_logo.png */,
 				E87E1CC190B142CF958FD2DC /* figma_logo.png */,
@@ -202,6 +195,10 @@
 				DB2BA66E60F942D9B5D2FBF1 /* university1.png */,
 				65E4DD8F3FDD48AA997F3ABC /* user1.jpeg */,
 				CBFAADF584FA456196BC6B3C /* user2.png */,
+				0911D550B1FE4C37A371DD81 /* app_icon.png */,
+				755A29D4DB744AC2B0B50D61 /* SF-Compact-Display-Bold.ttf */,
+				28FA18F05D50456CB5699FE3 /* SF-Compact-Display-Medium.ttf */,
+				55A127D6F032449CAAF0FE67 /* SF-Compact-Display-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -400,15 +397,10 @@
 				7EF477E22AFB8347009AD7E9 /* Entypo.ttf in Resources */,
 				7EF477E82AFB8347009AD7E9 /* FontAwesome5_Solid.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				4BAF9E4F42E347ACB945C040 /* SF-Compact-Display-Bold.ttf in Resources */,
 				7EF477E12AFB8347009AD7E9 /* FontAwesome6_Regular.ttf in Resources */,
 				7EF477E52AFB8347009AD7E9 /* AntDesign.ttf in Resources */,
 				7EF477E32AFB8347009AD7E9 /* FontAwesome5_Brands.ttf in Resources */,
 				7EF477F02AFB8347009AD7E9 /* MaterialIcons.ttf in Resources */,
-				09451D6CA1C54015979755D3 /* SF-Compact-Display-Medium.ttf in Resources */,
-				A0D1C49093F24C3390E74D6C /* SF-Compact-Display-Regular.ttf in Resources */,
-				73243CC14197442E915C8474 /* SF-Compact-Display-Semibold.ttf in Resources */,
-				0396E7934BC0454E9D4C48BF /* app_icon.png in Resources */,
 				B4B61C294C844528A0253559 /* adobe_logo.png in Resources */,
 				7EF477E62AFB8347009AD7E9 /* Foundation.ttf in Resources */,
 				7EF477EF2AFB8347009AD7E9 /* FontAwesome6_Brands.ttf in Resources */,
@@ -441,6 +433,10 @@
 				5D62BB248EC3427287E6958D /* user1.jpeg in Resources */,
 				7EF477ED2AFB8347009AD7E9 /* FontAwesome6_Solid.ttf in Resources */,
 				620B157D9EBC4CE498C8B302 /* user2.png in Resources */,
+				03162EAAAEC44373B54A4AEA /* app_icon.png in Resources */,
+				AAEC262FEF284129929DBFFE /* SF-Compact-Display-Bold.ttf in Resources */,
+				FD197F38E80945CC9B956A23 /* SF-Compact-Display-Medium.ttf in Resources */,
+				2BC9255BB6C143F7AE95031E /* SF-Compact-Display-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  RefreshControl
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Colors, Fonts, Sizes, screenWidth} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -39,22 +40,30 @@ const HomeScreen = ({ navigation }) => {
   const [showSnackBar, setshowSnackBar] = useState(false);
   const [snackBarMsg, setsnackBarMsg] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchJobData();
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     fetchJobData();
-  }, []);
+  }, [onRefresh]);
 
   const fetchJobData = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(apiUrl, {
         params: {
-          query: 'python',
+          query: 'web',
           page: '1',
           num_pages: '1',
         },
         headers: headers,
       });
-      console.log(typeof response.data.data);
+      console.log(response.data.data);
       setjobData(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -84,7 +93,12 @@ const HomeScreen = ({ navigation }) => {
     <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <MyStatusBar />
       <View style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {header()}
           {searchField()}
           {banner()}
@@ -144,7 +158,7 @@ const HomeScreen = ({ navigation }) => {
                       }}
                     />
                     <Text style={{ ...Fonts.primaryColor16SemiBold }}>
-                      {item.job_min_salary ? `$${item.job_min_salary}/Mo` : 'Salary N/A'}
+                      {item.job_min_salary ? `$${item.job_min_salary}/Mo` : 'Salary TBD'}
                     </Text>
                   </View>
                 </TouchableOpacity>

@@ -3,31 +3,27 @@
   "data": [
     {
       "path": "assets/fonts/SF-Compact-Display-Bold.ttf",
-      "sha1": "f87f00122589d2882452c53f41dda90cd09c273f"
+      "sha1": "020aaec9cdeb59aa8ebd2e4c693527cddb2d1577"
     },
     {
       "path": "assets/fonts/SF-Compact-Display-Medium.ttf",
-      "sha1": "33d432ca2209e8490773a924f8fee64465f1d770"
+      "sha1": "da662f767e6261491e20da197bd7ffbb7a7d122c"
     },
     {
       "path": "assets/fonts/SF-Compact-Display-Regular.ttf",
-      "sha1": "2c8c54e6ecab017bb7b0f1765ac45ed6ccb98025"
-    },
-    {
-      "path": "assets/fonts/SF-Compact-Display-Semibold.ttf",
-      "sha1": "41cdf8b2519c868922abe0f42b8367fe9d83b1f1"
+      "sha1": "8238e55f0320c3abc74057c988367c2f25fa3727"
     },
     {
       "path": "assets/images/app_icon.png",
-      "sha1": "082ddeeaf1b1f32ed07d4c203add4936bef1a550"
-    },
-    {
-      "path": "assets/images/icons/adobe_logo.png",
-      "sha1": "0c81e716919ccba412c1eeb0c31f8ed9d44c34cd"
+      "sha1": "0b76148acf95059ee89dd487d76f902774d88d88"
     },
     {
       "path": "assets/images/icons/adobexd_logo.png",
       "sha1": "303515553eda26313feb92a24102f68fc96fd227"
+    },
+    {
+      "path": "assets/images/icons/adobe_logo.png",
+      "sha1": "0c81e716919ccba412c1eeb0c31f8ed9d44c34cd"
     },
     {
       "path": "assets/images/icons/figma_logo.png",

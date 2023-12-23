@@ -45,8 +45,8 @@ const SplashScreen = ({navigation}) => {
           }}
         />
         <Text style={{...styles.appTitleTextStyle}}>
-          Job
-          <Text style={{...Fonts.pinkColor20Bold}}> Finder</Text>
+          Career
+          <Text style={{...Fonts.pinkColor20Bold}}>Sync</Text>
         </Text>
       </View>
     </View>
