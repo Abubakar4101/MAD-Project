@@ -1,3 +1,4 @@
+import React, { useState, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,25 +8,39 @@ import {
   TouchableOpacity,
   BackHandler,
   Platform,
+  Alert,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Colors, CommonStyles, Fonts, Sizes} from '../../constants/styles';
-import {Text} from '../../components/commonText';
-import {useFocusEffect} from '@react-navigation/native';
+import { Colors, CommonStyles, Fonts, Sizes } from '../../constants/styles';
+import { Text } from '../../components/commonText';
+import { useFocusEffect } from '@react-navigation/native';
 import MyStatusBar from '../../components/myStatusBar';
+import auth from '@react-native-firebase/auth';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
+  const [backClickCount, setBackClickCount] = useState(0);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [securePassword, setSecurePassword] = useState(true);
+
   const backAction = () => {
     if (Platform.OS === 'ios') {
-      navigation.addListener('beforeRemove', e => {
+      navigation.addListener('beforeRemove', (e) => {
         e.preventDefault();
       });
     } else {
-      backClickCount == 1 ? BackHandler.exitApp() : _spring();
+      backClickCount === 1 ? BackHandler.exitApp() : _spring();
       return true;
     }
+  };
+
+  const _spring = () => {
+    setBackClickCount(1);
+    setTimeout(() => {
+      setBackClickCount(0);
+    }, 1000);
   };
 
   useFocusEffect(
@@ -39,25 +54,27 @@ const LoginScreen = ({navigation}) => {
     }, [backAction]),
   );
 
-  function _spring() {
-    setBackClickCount(1);
-    setTimeout(() => {
-      setBackClickCount(0);
-    }, 1000);
-  }
-
-  const [backClickCount, setBackClickCount] = useState(0);
-  const [email, setemail] = useState('');
-  const [password, setpassword] = useState('');
-  const [securePassword, setsecurePassword] = useState(true);
+  const handleLogin = async () => {
+    try {
+      const userCredential = await auth().signInWithEmailAndPassword(
+        email,
+        password,
+      );
+      const user = userCredential.user;
+      navigation.push('BottomTabBar');
+    } catch (error) {
+      Alert.alert('Login Error', error.message);
+    }
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
+    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <MyStatusBar />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          automaticallyAdjustKeyboardInsets={true}>
+          automaticallyAdjustKeyboardInsets={true}
+        >
           {appIcon()}
           {title()}
           {emailInfo()}
@@ -72,101 +89,78 @@ const LoginScreen = ({navigation}) => {
     </View>
   );
 
-  function exitInfo() {
-    return backClickCount == 1 ? (
-      <View style={styles.exitInfoWrapStyle}>
-        <Text style={{...Fonts.whiteColor14Medium}}>
-          Press Back Once Again To Exit!
-        </Text>
+  function appIcon() {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: Sizes.fixPadding * 2.5,
+        }}
+      >
+        <Image
+          source={require('../../assets/images/app_icon.png')}
+          style={{
+            width: 100.0,
+            height: 100.0,
+            resizeMode: 'contain',
+          }}
+        />
       </View>
-    ) : null;
+    );
   }
 
-  function dontAccountInfo() {
+  function title() {
     return (
-      <Text
-        style={{
-          margin: Sizes.fixPadding * 2.0,
-          ...Fonts.grayColor16Medium,
-          textAlign: 'center',
-        }}>
-        Don’t have an account?
-        <Text
-          onPress={() => navigation.push('Register')}
-          style={{...Fonts.primaryColor16Medium}}>
-          {' '}
-          Register now
+      <Text style={{ ...Fonts.blackColor20Bold, textAlign: 'center' }}>
+        Login to{' '}
+        <Text style={{ ...styles.appTitleTextStyle }}>
+          Career<Text style={{ ...Fonts.pinkColor20Bold }}>Sync</Text>
         </Text>
       </Text>
     );
   }
 
-  function orOptions() {
+  function emailInfo() {
     return (
-      <View style={{alignItems: 'center', margin: Sizes.fixPadding * 2.0}}>
-        <Text style={{...Fonts.grayColor16Medium}}>Or Continue with</Text>
-        <View
-          style={{
-            marginTop: Sizes.fixPadding * 2.5,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          {socialMediaOptionSort({
-            iconName: 'google',
-            bgColor: '#DD4F43',
-          })}
-          {socialMediaOptionSort({iconName: 'github', bgColor: '#000000'})}
+      <View style={{ margin: Sizes.fixPadding * 2.0 }}>
+        <Text style={{ ...Fonts.grayColor16Regular }}>
+          Email
+          <Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+        </Text>
+        <View style={CommonStyles.textFieldWrapper}>
+          <MaterialCommunityIcons
+            name="email"
+            size={30}
+            color={Colors.primaryColor}
+          />
+          <TextInput
+            placeholder="Enter Email"
+            placeholderTextColor={Colors.grayColor}
+            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            cursorColor={Colors.primaryColor}
+            value={email}
+            onChangeText={(val) => setEmail(val)}
+            keyboardType="email-address"
+          />
         </View>
       </View>
     );
   }
 
-  function socialMediaOptionSort({iconName, bgColor}) {
-    return (
-      <View
-        style={{
-          backgroundColor: bgColor,
-          ...styles.socialCircleStyle,
-        }}>
-        <FontAwesome name={iconName} size={30} color={Colors.whiteColor} />
-      </View>
-    );
-  }
-
-  function loginButton() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => {
-          navigation.push('Register');
-        }}
-        style={{...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0}}>
-        <Text style={{...Fonts.whiteColor18SemiBold}}>Login</Text>
-        <MaterialCommunityIcons
-          name="login"
-          size={30}
-          color={Colors.whiteColor}
-        />
-      </TouchableOpacity>
-    );
-  }
-
-  function forgetPasswordText() {
-    return <Text style={styles.forgetPasswordTextStyle}>Forget password?</Text>;
-  }
-
   function passwordInfo() {
     return (
-      <View style={{marginHorizontal: Sizes.fixPadding * 2.0}}>
-        <Text style={{...Fonts.grayColor16Regular}}>
-          Password<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
+      <View style={{ marginHorizontal: Sizes.fixPadding * 2.0 }}>
+        <Text style={{ ...Fonts.grayColor16Regular }}>
+          Password<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
         </Text>
         <View
           style={{
             ...CommonStyles.textFieldWrapper,
             flexDirection: 'row',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <MaterialCommunityIcons
             name="lock"
             size={30}
@@ -183,7 +177,7 @@ const LoginScreen = ({navigation}) => {
             }}
             cursorColor={Colors.primaryColor}
             value={password}
-            onChangeText={val => setpassword(val)}
+            onChangeText={(val) => setPassword(val)}
             secureTextEntry={securePassword}
           />
           <MaterialCommunityIcons
@@ -191,7 +185,7 @@ const LoginScreen = ({navigation}) => {
             size={20}
             color={Colors.lightGrayColor}
             onPress={() => {
-              setsecurePassword(!securePassword);
+              setSecurePassword(!securePassword);
             }}
           />
         </View>
@@ -199,62 +193,95 @@ const LoginScreen = ({navigation}) => {
     );
   }
 
-  function emailInfo() {
+  function forgetPasswordText() {
     return (
-      <View style={{margin: Sizes.fixPadding * 2.0}}>
-        <Text style={{...Fonts.grayColor16Regular}}>
-          Email
-          <Text style={{...Fonts.redColor15SemiBold}}>*</Text>
-        </Text>
-        <View style={CommonStyles.textFieldWrapper}>
-          <MaterialCommunityIcons
-            name="email"
-            size={30}
-            color={Colors.primaryColor}
-          />
-          <TextInput
-            placeholder="Enter Email"
-            placeholderTextColor={Colors.grayColor}
-            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
-            cursorColor={Colors.primaryColor}
-            value={email}
-            onChangeText={val => setemail(val)}
-            keyboardType="email-address"
-          />
+      <Text style={styles.forgetPasswordTextStyle}>Forget password?</Text>
+    );
+  }
+
+  function loginButton() {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={handleLogin}
+        style={{ ...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0 }}
+      >
+        <Text style={{ ...Fonts.whiteColor18SemiBold }}>Login</Text>
+        <MaterialCommunityIcons
+          name="login"
+          size={30}
+          color={Colors.whiteColor}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  function orOptions() {
+    return (
+      <View style={{ alignItems: 'center', margin: Sizes.fixPadding * 2.0 }}>
+        <Text style={{ ...Fonts.grayColor16Medium }}>Or Continue with</Text>
+        <View
+          style={{
+            marginTop: Sizes.fixPadding * 2.5,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          {socialMediaOptionSort({
+            iconName: 'google',
+            bgColor: '#DD4F43',
+          })}
+          {socialMediaOptionSort({
+            iconName: 'github',
+            bgColor: '#000000',
+          })}
         </View>
       </View>
     );
   }
 
-  function title() {
+  function socialMediaOptionSort({ iconName, bgColor }) {
     return (
-      <Text style={{...Fonts.blackColor20Bold, textAlign: 'center'}}>
-        Login to{' '}
-        <Text style={{...styles.appTitleTextStyle}}>
-          Career<Text style={{...Fonts.pinkColor20Bold}}>Sync</Text>
+      <View
+        style={{
+          backgroundColor: bgColor,
+          ...styles.socialCircleStyle,
+        }}
+      >
+        <FontAwesome name={iconName} size={30} color={Colors.whiteColor} />
+      </View>
+    );
+  }
+
+  function dontAccountInfo() {
+    return (
+      <Text
+        style={{
+          margin: Sizes.fixPadding * 2.0,
+          ...Fonts.grayColor16Medium,
+          textAlign: 'center',
+        }}
+      >
+        Don’t have an account?
+        <Text
+          onPress={() => navigation.push('Register')}
+          style={{ ...Fonts.primaryColor16Medium }}
+        >
+          {' '}
+          Register now
         </Text>
       </Text>
     );
   }
 
-  function appIcon() {
-    return (
-      <View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: Sizes.fixPadding * 2.5,
-        }}>
-        <Image
-          source={require('../../assets/images/app_icon.png')}
-          style={{
-            width: 100.0,
-            height: 100.0,
-            resizeMode: 'contain',
-          }}
-        />
+  function exitInfo() {
+    return backClickCount === 1 ? (
+      <View style={styles.exitInfoWrapStyle}>
+        <Text style={{ ...Fonts.whiteColor14Medium }}>
+          Press Back Once Again To Exit!
+        </Text>
       </View>
-    );
+    ) : null;
   }
 };
 
@@ -275,7 +302,7 @@ const styles = StyleSheet.create({
   appNameTextStyle: {
     ...Fonts.primaryColor16Bold,
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 5,
   },
   forgetPasswordTextStyle: {

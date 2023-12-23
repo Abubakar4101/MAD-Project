@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "411526415031",
+    "project_id": "mad-project-f657b",
+    "storage_bucket": "mad-project-f657b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411526415031:android:0535e2de14722259d74332",
+        "android_client_info": {
+          "package_name": "com.rncli_jobfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCasyg7N5-F4kDtXFpgdP0Dez7mh4wFohQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

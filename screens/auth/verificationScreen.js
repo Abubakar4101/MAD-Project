@@ -1,34 +1,27 @@
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
-  Platform,
-} from 'react-native';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { StyleSheet, View, ScrollView, TouchableOpacity, ActivityIndicator, Platform, Image } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Colors, CommonStyles, Fonts, Sizes} from '../../constants/styles';
-import {Text} from '../../components/commonText';
-import OTPTextView from 'react-native-otp-textinput';
-import {Overlay} from '@rneui/themed';
+import { Colors, CommonStyles, Fonts, Sizes } from '../../constants/styles';
+import { Text } from '../../components/commonText';
+import { Overlay } from '@rneui/themed';
 import MyStatusBar from '../../components/myStatusBar';
+import Logo from '../../assets/images/app_icon.png'; // Import your logo component
 
-const VerificationScreen = ({navigation}) => {
-  const [otpInput, setotpInput] = useState('');
-  const [isLoading, setisLoading] = useState(false);
+const VerificationScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
+    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <MyStatusBar />
-      <View style={{flex: 1}}>
-        {header()}
+      <View style={{ flex: 1 }}>
+        {renderHeader()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          automaticallyAdjustKeyboardInsets={true}>
-          {enterOtpInfo()}
-          {otpFields()}
-          {continueButton()}
+          automaticallyAdjustKeyboardInsets={true}
+          contentContainerStyle={styles.scrollViewContent}
+        >
+          {verificationInfo()}
+          {checkEmailText()}
         </ScrollView>
         {loadingDialog()}
       </View>
@@ -42,110 +35,89 @@ const VerificationScreen = ({navigation}) => {
           color={Colors.primaryColor}
           style={{
             alignSelf: 'center',
-            transform: [{scale: Platform.OS == 'ios' ? 1.5 : 2.0}],
+            transform: [{ scale: Platform.OS === 'ios' ? 1.5 : 2.0 }],
           }}
         />
         <Text
           style={{
             marginTop: Sizes.fixPadding + 5.0,
             textAlign: 'center',
-
             ...Fonts.blackColor16Regular,
-          }}>
-          Please wait...
+          }}
+        >
+          Sending verification email...
         </Text>
       </Overlay>
     );
   }
 
-  function otpFields() {
-    return (
-      <OTPTextView
-        containerStyle={{
-          marginHorizontal: Sizes.fixPadding * 2.0,
-          marginVertical: Sizes.fixPadding,
-          alignSelf: 'flex-start',
-        }}
-        handleTextChange={text => {
-          setotpInput(text);
-          if (otpInput.length == 3 && text.length == 4) {
-            setisLoading(true);
-            setTimeout(() => {
-              setisLoading(false);
-              navigation.push('BottomTabBar');
-            }, 2000);
-          }
-        }}
-        inputCount={4}
-        autoFocus={true}
-        keyboardType="numeric"
-        tintColor={Colors.primaryColor}
-        offTintColor={Colors.extraLightGrayColor}
-        textInputStyle={{...styles.textFieldStyle}}
-      />
-    );
-  }
-
-  function continueButton() {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() => {
-          setisLoading(true);
-          setTimeout(() => {
-            setisLoading(false);
-            navigation.push('BottomTabBar');
-          }, 2000);
-        }}
-        style={{...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0}}>
-        <Text style={{...Fonts.whiteColor18SemiBold}}>Continue</Text>
-      </TouchableOpacity>
-    );
-  }
-
-  function enterOtpInfo() {
+  function checkEmailText() {
     return (
       <Text
         style={{
           ...Fonts.grayColor16Regular,
           marginVertical: Sizes.fixPadding,
           marginHorizontal: Sizes.fixPadding * 2.0,
-        }}>
-        Enter 4 digit verification code. We just sent you on given number.
+          textAlign: 'center',
+        }}
+      >
+        Please check your email for the verification link. If you didn't receive the email, please ensure to check your spam folder.
       </Text>
     );
   }
 
-  function header() {
+  function verificationInfo() {
     return (
-      <View
+      <Text
         style={{
-          margin: Sizes.fixPadding * 2.0,
-          justifyContent: 'center',
-        }}>
+          ...Fonts.grayColor16Regular,
+          marginVertical: Sizes.fixPadding * 2.0,
+          marginHorizontal: Sizes.fixPadding * 2.0,
+          textAlign: 'center',
+        }}
+      >
+        Verification Email Sent
+      </Text>
+    );
+  }
+
+  function renderHeader() {
+    return (
+      <View style={styles.headerContainer}>
         <MaterialIcons
           name="keyboard-backspace"
           size={26}
           color={Colors.blackColor}
-          style={{position: 'absolute', zIndex: 100}}
+          style={styles.backIcon}
           onPress={() => {
             navigation.pop();
           }}
         />
+        <Logo style={styles.logo} /> {/* Replace with your logo component */}
         <Text style={CommonStyles.headerTextStyle}>Verification</Text>
       </View>
     );
   }
 };
 
-export default VerificationScreen;
-
 const styles = StyleSheet.create({
-  textFieldStyle: {
-    borderRadius: Sizes.fixPadding - 5.0,
-    backgroundColor: Colors.extraLightGrayColor,
-    borderWidth: 1.5,
-    ...Fonts.blackColor16Medium,
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: Sizes.fixPadding * 2.0,
+  },
+  backIcon: {
+    position: 'absolute',
+    zIndex: 100,
+  },
+  logo: {
+    width: 40, // Adjust the width as needed
+    height: 40, // Adjust the height as needed
     marginRight: Sizes.fixPadding,
   },
   dialogStyle: {
@@ -158,3 +130,5 @@ const styles = StyleSheet.create({
     elevation: 3.0,
   },
 });
+
+export default VerificationScreen;
