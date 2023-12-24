@@ -15,6 +15,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Feather from 'react-native-vector-icons/Feather';
 import {Text} from '../../components/commonText';
 import {getJobTypes} from '../../services/openAi';
+import {useCandidateContext} from '../../context/candidateProvider';
 import {Snackbar} from 'react-native-paper';
 import MyStatusBar from '../../components/myStatusBar';
 import axios from 'axios';
@@ -27,6 +28,12 @@ const headers = {
 };
 
 const HomeScreen = ({navigation}) => {
+  const {candidateData} = useCandidateContext();
+  
+  useEffect(() => {
+    console.log('candidateData from home', candidateData);
+  }, [candidateData]);
+
   const [selectedJobTypeIndex, setselectedJobTypeIndex] = useState(0);
   const [jobData, setjobData] = useState([]);
   const [showSnackBar, setshowSnackBar] = useState(false);
@@ -58,7 +65,7 @@ const HomeScreen = ({navigation}) => {
       setIsLoading(true);
       const response = await axios.get(apiUrl, {
         params: {
-          query: 'web',
+          query: candidateData.preferredJobType,
           page: '1',
           num_pages: '1',
         },
@@ -305,7 +312,7 @@ const HomeScreen = ({navigation}) => {
       <View style={styles.headerWrapStyle}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
           <Image
-            source={require('../../assets/images/users/user1.jpeg')}
+            source={{uri: candidateData.profilePic}}
             style={styles.userCircleImage}
           />
           <View
@@ -315,7 +322,7 @@ const HomeScreen = ({navigation}) => {
               flex: 1,
             }}>
             <Text numberOfLines={1} style={{...Fonts.blackColor20Bold}}>
-              Hello, Samantha !
+            Hello, {candidateData?.name || 'Guest'}!
             </Text>
             <Text
               style={{

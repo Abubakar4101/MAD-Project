@@ -13,6 +13,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {BottomSheet} from '@rneui/themed';
 import {Text} from '../../components/commonText';
 import MyStatusBar from '../../components/myStatusBar';
+import {useCandidateContext} from '../../context/candidateProvider';
 
 const websiteTypesList = [
   'Personal',
@@ -37,8 +38,10 @@ const websitesList = [
 ];
 
 const EditContactInfoScreen = ({navigation}) => {
-  const [email, setemail] = useState('samanthasmith@gmail.com');
-  const [mobileNumber, setmobileNumber] = useState('+(444) 145-8965');
+  const {candidateData} = useCandidateContext();
+
+  const [email, setemail] = useState(candidateData.email);
+  const [mobileNumber, setmobileNumber] = useState(candidateData.mobile);
   const [websites, setwebsites] = useState(websitesList);
   const [showWebsiteTypeSheet, setshowWebsiteTypeSheet] = useState(false);
   const [selectedWebsiteType, setselectedWebsiteType] = useState('');

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import {
+  StyleSheet,
   View,
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,6 +13,10 @@ import { Colors, CommonStyles, Fonts, Sizes } from '../../constants/styles';
 import { Text } from '../../components/commonText';
 import MyStatusBar from '../../components/myStatusBar';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { BottomSheet } from '@rneui/themed';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -20,12 +26,51 @@ const RegisterScreen = ({ navigation }) => {
   const [securePassword, setSecurePassword] = useState(true);
   const [preferredLocation, setPreferredLocation] = useState('');
   const [preferredJobType, setPreferredJobType] = useState('');
+  const [showProfilePicChangeSheet, setshowProfilePicChangeSheet] =
+    useState(false);
+
+  const [profilePicUri, setProfilePicUri] = useState(null);
+
+  const selectProfilePic = async() => {
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+      });
+
+      if (image) {
+        setProfilePicUri(image.path);
+      }
+    } catch (error) {
+      console.error('Image picker error:', error);
+    }
+  };
 
   const registerUser = async () => {
+    
+
     try {
-      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        email,
+        password
+      );
       const user = userCredential.user;
-      navigation.push('Verification');
+
+      const reference = storage().ref(`profile_pics/${user.uid}`);
+      await reference.putFile(profilePicUri);
+      const downloadURL = await reference.getDownloadURL();
+
+      await firestore().collection('candidates').doc(user.uid).set({
+        name,
+        email,
+        mobile,
+        password,
+        preferredLocation,
+        preferredJobType,
+        profilePic: downloadURL,
+      });
+      //navigation.push('Verification');
     } catch (error) {
       console.error('Registration error:', error.message);
     }
@@ -40,6 +85,7 @@ const RegisterScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           automaticallyAdjustKeyboardInsets={true}
         >
+          {profilePic()}
           {nameInfo()}
           {emailInfo()}
           {mobileInfo()}
@@ -48,6 +94,7 @@ const RegisterScreen = ({ navigation }) => {
           {preferredJobTypeInfo()}
           {registerButton()}
         </ScrollView>
+        {changeProfilePicSheet()}
         {alreadyAccountInfo()}
       </View>
     </View>
@@ -85,6 +132,100 @@ const RegisterScreen = ({ navigation }) => {
       >
         <Text style={{ ...Fonts.whiteColor18SemiBold }}>Register</Text>
       </TouchableOpacity>
+    );
+  }
+
+  function profilePic() {
+    return (
+      <View
+        style={{
+          marginHorizontal: Sizes.fixPadding * 2.0,
+          alignSelf: 'center',
+        }}
+      >
+        <Image
+          source={
+            profilePicUri
+              ? { uri: profilePicUri }
+              : require('../../assets/images/users/user1.jpeg')
+          }
+          style={styles.profilePicStyle}
+        />
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            setshowProfilePicChangeSheet(true);
+          }}
+          style={styles.picChangeIconWrapStyle}
+        >
+          <MaterialIcons
+            name="camera-alt"
+            size={14}
+            color={Colors.whiteColor}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  function changeProfilePicSheet() {
+    return (
+      <BottomSheet
+        scrollViewProps={{
+          scrollEnabled: false,
+          showsVerticalScrollIndicator: false,
+        }}
+        isVisible={showProfilePicChangeSheet}
+        onBackdropPress={() => setshowProfilePicChangeSheet(false)}
+      >
+        <View
+          style={{
+            backgroundColor: Colors.whiteColor,
+            paddingVertical: Sizes.fixPadding * 2.0,
+          }}
+        >
+          <Text style={styles.sheetHeaderStyle}>Change Profile Photo</Text>
+          <View style={styles.sheetDivider} />
+          <Text
+            onPress={() => {
+              setProfilePicUri(null);
+              setshowProfilePicChangeSheet(false);
+            }}
+            style={{
+              ...Fonts.redColor16Regular,
+              textAlign: 'center',
+            }}
+          >
+            Remove Current Photo
+          </Text>
+          <View style={styles.sheetDivider} />
+          <Text
+            onPress={async () => {
+              setshowProfilePicChangeSheet(false);
+              await selectProfilePic();
+            }}
+            style={{
+              ...Fonts.blackColor16Regular,
+              textAlign: 'center',
+            }}
+          >
+            Take Photo
+          </Text>
+          <View style={styles.sheetDivider} />
+          <Text
+            onPress={() => {
+              setshowProfilePicChangeSheet(false);
+              selectProfilePic();
+            }}
+            style={{
+              ...Fonts.blackColor16Regular,
+              textAlign: 'center',
+            }}
+          >
+            Choose From Library
+          </Text>
+        </View>
+      </BottomSheet>
     );
   }
 
@@ -254,3 +395,36 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  sheetHeaderStyle: {
+    ...Fonts.blackColor20Bold,
+    textAlign: 'center',
+    marginBottom: Sizes.fixPadding - 5.0,
+    marginHorizontal: Sizes.fixPadding * 2.0,
+  },
+  sheetDivider: {
+    backgroundColor: Colors.lightGrayColor,
+    height: 1.0,
+    marginVertical: Sizes.fixPadding + 5.0,
+  },
+  picChangeIconWrapStyle: {
+    width: 32.0,
+    height: 32.0,
+    borderRadius: 16.0,
+    backgroundColor: Colors.primaryColor,
+    borderColor: Colors.whiteColor,
+    borderWidth: 3.0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: -10.0,
+    right: 0,
+  },
+  profilePicStyle: {
+    width: 100.0,
+    height: 100.0,
+    borderRadius: 50.0,
+    overflow: 'hidden',
+  },
+});

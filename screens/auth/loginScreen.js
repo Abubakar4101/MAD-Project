@@ -15,11 +15,16 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Colors, CommonStyles, Fonts, Sizes } from '../../constants/styles';
 import { Text } from '../../components/commonText';
+import { useCandidateContext } from '../../context/candidateProvider';
 import { useFocusEffect } from '@react-navigation/native';
 import MyStatusBar from '../../components/myStatusBar';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 
 const LoginScreen = ({ navigation }) => {
+  const { setCandidate } = useCandidateContext();
+
   const [backClickCount, setBackClickCount] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -61,7 +66,14 @@ const LoginScreen = ({ navigation }) => {
         password,
       );
       const user = userCredential.user;
-      navigation.push('BottomTabBar');
+      firestore()
+      .collection('candidates')
+      .doc(user.uid)
+      .onSnapshot(documentSnapshot => {
+        setCandidate(documentSnapshot.data());
+        navigation.push('BottomTabBar');
+      });
+
     } catch (error) {
       Alert.alert('Login Error', error.message);
     }

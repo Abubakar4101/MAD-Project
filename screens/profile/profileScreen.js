@@ -16,6 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {BottomSheet} from '@rneui/themed';
 import MyStatusBar from '../../components/myStatusBar';
+import {useCandidateContext} from '../../context/candidateProvider';
 
 const profileWebsites = [
   'https://dribble.com/samanthasmith-85r66s4g9',
@@ -47,6 +48,8 @@ const workExperiencesList = [
 ];
 
 const ProfileScreen = ({navigation}) => {
+  const {candidateData} = useCandidateContext();
+
   const [readMore, setreadMore] = useState(false);
   const [showProfilePicChangeSheet, setshowProfilePicChangeSheet] =
     useState(false);
@@ -349,7 +352,7 @@ const ProfileScreen = ({navigation}) => {
               ...Fonts.grayColor15Regular,
               marginTop: Sizes.fixPadding - 7.0,
             }}>
-            samanthasmith@gmail.com
+            {candidateData.email}
           </Text>
         </View>
         <View style={{marginVertical: Sizes.fixPadding + 2.0}}>
@@ -359,7 +362,7 @@ const ProfileScreen = ({navigation}) => {
               ...Fonts.grayColor15Regular,
               marginTop: Sizes.fixPadding - 7.0,
             }}>
-            +(444) 145-8965
+            {candidateData.mobile}
           </Text>
         </View>
         <View style={{}}>
@@ -388,7 +391,7 @@ const ProfileScreen = ({navigation}) => {
   function profileImage() {
     return (
       <ImageBackground
-        source={require('../../assets/images/users/user1.jpeg')}
+        source={{uri: candidateData.profilePic}}
         style={{
           width: screenWidth,
           height: screenWidth - 120,
@@ -408,13 +411,13 @@ const ProfileScreen = ({navigation}) => {
             />
           </View>
           <View>
-            <Text style={{...Fonts.whiteColor19SemiBold}}>Samantha Smith</Text>
+            <Text style={{...Fonts.whiteColor19SemiBold}}>{candidateData.name}</Text>
             <Text
               style={{
                 ...Fonts.whiteColor16Medium,
                 marginTop: Sizes.fixPadding - 8.0,
               }}>
-              Sr. UI/UX Designer
+              {candidateData.preferredJobType}
             </Text>
           </View>
         </View>

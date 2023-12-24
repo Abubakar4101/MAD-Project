@@ -93,7 +93,7 @@ const VerificationScreen = ({ navigation }) => {
             navigation.pop();
           }}
         />
-        <Logo style={styles.logo} /> {/* Replace with your logo component */}
+        <Logo style={styles.logo} />
         <Text style={CommonStyles.headerTextStyle}>Verification</Text>
       </View>
     );

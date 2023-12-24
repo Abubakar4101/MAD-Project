@@ -14,13 +14,20 @@ import HomeScreen from '../screens/home/homeScreen';
 import SavedScreen from '../screens/saved/savedScreen';
 import ChatScreen from '../screens/chat/chatScreen';
 import ProfileScreen from '../screens/profile/profileScreen';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
 import MyStatusBar from './myStatusBar';
+import {useCandidateContext} from '../context/candidateProvider';
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabBarScreen = ({navigation}) => {
+  
+  // const {candidateData} = useCandidateContext();
+  // useEffect(() => {
+  //   console.log('candidateData from bottom', candidateData);
+  // }, [candidateData]);
+
   const backAction = () => {
     if (Platform.OS === 'ios') {
       navigation.addListener('beforeRemove', e => {
@@ -72,54 +79,58 @@ const BottomTabBarScreen = ({navigation}) => {
               height: 60.0,
             },
           }}>
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{
-              tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons
-                  name="home-variant"
-                  size={24}
-                  color={color}
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Saved"
-            component={SavedScreen}
-            options={{
-              tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons
-                  name="bookmark"
-                  size={24}
-                  color={color}
-                />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Chat"
-            component={ChatScreen}
-            options={{
-              tabBarIcon: ({color}) => (
-                <Ionicons name="chatbubble-ellipses" size={22} color={color} />
-              ),
-            }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              tabBarIcon: ({color}) => (
-                <MaterialCommunityIcons
-                  name="account"
-                  size={24}
-                  color={color}
-                />
-              ),
-            }}
-          />
+            <Tab.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                tabBarIcon: ({color}) => (
+                  <MaterialCommunityIcons
+                    name="home-variant"
+                    size={24}
+                    color={color}
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Saved"
+              component={SavedScreen}
+              options={{
+                tabBarIcon: ({color}) => (
+                  <MaterialCommunityIcons
+                    name="bookmark"
+                    size={24}
+                    color={color}
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{
+                tabBarIcon: ({color}) => (
+                  <Ionicons
+                    name="chatbubble-ellipses"
+                    size={22}
+                    color={color}
+                  />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                tabBarIcon: ({color}) => (
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={24}
+                    color={color}
+                  />
+                ),
+              }}
+            />
         </Tab.Navigator>
       </SafeAreaView>
       {exitInfo()}
