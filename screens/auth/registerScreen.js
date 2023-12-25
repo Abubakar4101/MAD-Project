@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,16 +9,14 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { Colors, CommonStyles, Fonts, Sizes } from '../../constants/styles';
-import { Text } from '../../components/commonText';
+import {Colors, CommonStyles, Fonts, Sizes} from '../../constants/styles';
+import {Text} from '../../components/commonText';
 import MyStatusBar from '../../components/myStatusBar';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import { BottomSheet } from '@rneui/themed';
+import {BottomSheet} from '@rneui/themed';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({navigation}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -31,7 +29,7 @@ const RegisterScreen = ({ navigation }) => {
 
   const [profilePicUri, setProfilePicUri] = useState(null);
 
-  const selectProfilePic = async() => {
+  const selectProfilePic = async () => {
     try {
       const image = await ImagePicker.openPicker({
         width: 300,
@@ -48,43 +46,41 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const registerUser = async () => {
-    
-
     try {
-      const userCredential = await auth().createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      const user = userCredential.user;
+      const userCredential = await auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          auth().currentUser.sendEmailVerification();
+        });
+      // const user = userCredential.user;
 
-      const reference = storage().ref(`profile_pics/${user.uid}`);
-      await reference.putFile(profilePicUri);
-      const downloadURL = await reference.getDownloadURL();
+      // const reference = storage().ref(`profile_pics/${user.uid}`);
+      // await reference.putFile(profilePicUri);
+      // const downloadURL = await reference.getDownloadURL();
 
-      await firestore().collection('candidates').doc(user.uid).set({
+      navigation.push('Verification', {
         name,
         email,
         mobile,
         password,
         preferredLocation,
         preferredJobType,
-        profilePic: downloadURL,
+        profilePic:
+          'https://firebasestorage.googleapis.com/v0/b/mad-project-f657b.appspot.com/o/profile_pics%2FiyNx93eAqoV73ZmVUmXNWb4zY7P2?alt=media&token=a88da987-7e49-4a0e-8e4f-d0281493f236',
       });
-      //navigation.push('Verification');
     } catch (error) {
       console.error('Registration error:', error.message);
     }
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
       <MyStatusBar />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         {header()}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          automaticallyAdjustKeyboardInsets={true}
-        >
+          automaticallyAdjustKeyboardInsets={true}>
           {profilePic()}
           {nameInfo()}
           {emailInfo()}
@@ -107,15 +103,13 @@ const RegisterScreen = ({ navigation }) => {
           margin: Sizes.fixPadding * 2.0,
           ...Fonts.grayColor16Medium,
           textAlign: 'center',
-        }}
-      >
+        }}>
         Already have an account?
         <Text
           onPress={() => {
             navigation.push('Login');
           }}
-          style={{ ...Fonts.primaryColor16Medium }}
-        >
+          style={{...Fonts.primaryColor16Medium}}>
           {' '}
           Login now
         </Text>
@@ -128,9 +122,8 @@ const RegisterScreen = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={registerUser}
-        style={{ ...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0 }}
-      >
-        <Text style={{ ...Fonts.whiteColor18SemiBold }}>Register</Text>
+        style={{...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.whiteColor18SemiBold}}>Register</Text>
       </TouchableOpacity>
     );
   }
@@ -141,12 +134,11 @@ const RegisterScreen = ({ navigation }) => {
         style={{
           marginHorizontal: Sizes.fixPadding * 2.0,
           alignSelf: 'center',
-        }}
-      >
+        }}>
         <Image
           source={
             profilePicUri
-              ? { uri: profilePicUri }
+              ? {uri: profilePicUri}
               : require('../../assets/images/users/user1.jpeg')
           }
           style={styles.profilePicStyle}
@@ -156,8 +148,7 @@ const RegisterScreen = ({ navigation }) => {
           onPress={() => {
             setshowProfilePicChangeSheet(true);
           }}
-          style={styles.picChangeIconWrapStyle}
-        >
+          style={styles.picChangeIconWrapStyle}>
           <MaterialIcons
             name="camera-alt"
             size={14}
@@ -176,14 +167,12 @@ const RegisterScreen = ({ navigation }) => {
           showsVerticalScrollIndicator: false,
         }}
         isVisible={showProfilePicChangeSheet}
-        onBackdropPress={() => setshowProfilePicChangeSheet(false)}
-      >
+        onBackdropPress={() => setshowProfilePicChangeSheet(false)}>
         <View
           style={{
             backgroundColor: Colors.whiteColor,
             paddingVertical: Sizes.fixPadding * 2.0,
-          }}
-        >
+          }}>
           <Text style={styles.sheetHeaderStyle}>Change Profile Photo</Text>
           <View style={styles.sheetDivider} />
           <Text
@@ -194,8 +183,7 @@ const RegisterScreen = ({ navigation }) => {
             style={{
               ...Fonts.redColor16Regular,
               textAlign: 'center',
-            }}
-          >
+            }}>
             Remove Current Photo
           </Text>
           <View style={styles.sheetDivider} />
@@ -207,8 +195,7 @@ const RegisterScreen = ({ navigation }) => {
             style={{
               ...Fonts.blackColor16Regular,
               textAlign: 'center',
-            }}
-          >
+            }}>
             Take Photo
           </Text>
           <View style={styles.sheetDivider} />
@@ -220,8 +207,7 @@ const RegisterScreen = ({ navigation }) => {
             style={{
               ...Fonts.blackColor16Regular,
               textAlign: 'center',
-            }}
-          >
+            }}>
             Choose From Library
           </Text>
         </View>
@@ -231,24 +217,28 @@ const RegisterScreen = ({ navigation }) => {
 
   function passwordInfo() {
     return (
-      <View style={{ margin: Sizes.fixPadding * 2.0 }}>
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Password<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+      <View style={{margin: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Password<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View
           style={{
             ...CommonStyles.textFieldWrapper,
             flexDirection: 'row',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <TextInput
             placeholder="Enter Password"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, flex: 1, padding: 0 }}
+            style={{
+              ...Fonts.blackColor16Medium,
+              height: 30.0,
+              flex: 1,
+              padding: 0,
+            }}
             cursorColor={Colors.primaryColor}
             value={password}
-            onChangeText={(val) => setPassword(val)}
+            onChangeText={val => setPassword(val)}
             secureTextEntry={securePassword}
           />
           <MaterialCommunityIcons
@@ -266,18 +256,18 @@ const RegisterScreen = ({ navigation }) => {
 
   function mobileInfo() {
     return (
-      <View style={{ marginHorizontal: Sizes.fixPadding * 2.0 }}>
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Mobile Number<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+      <View style={{marginHorizontal: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Mobile Number<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
           <TextInput
             placeholder="Enter Mobile Number*"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
             cursorColor={Colors.primaryColor}
             value={mobile}
-            onChangeText={(val) => setMobile(val)}
+            onChangeText={val => setMobile(val)}
             keyboardType="number-pad"
           />
         </View>
@@ -287,18 +277,18 @@ const RegisterScreen = ({ navigation }) => {
 
   function emailInfo() {
     return (
-      <View style={{ margin: Sizes.fixPadding * 2.0 }}>
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Email<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+      <View style={{margin: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Email<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
           <TextInput
             placeholder="Enter Email"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
             cursorColor={Colors.primaryColor}
             value={email}
-            onChangeText={(val) => setEmail(val)}
+            onChangeText={val => setEmail(val)}
             keyboardType="email-address"
           />
         </View>
@@ -312,19 +302,18 @@ const RegisterScreen = ({ navigation }) => {
         style={{
           marginHorizontal: Sizes.fixPadding * 2.0,
           marginTop: Sizes.fixPadding + 5.0,
-        }}
-      >
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Name<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+        }}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Name<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
           <TextInput
             placeholder="Enter Name"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
             cursorColor={Colors.primaryColor}
             value={name}
-            onChangeText={(val) => setName(val)}
+            onChangeText={val => setName(val)}
           />
         </View>
       </View>
@@ -333,18 +322,19 @@ const RegisterScreen = ({ navigation }) => {
 
   function preferredLocationInfo() {
     return (
-      <View style={{ margin: Sizes.fixPadding * 2.0 }}>
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Preferred Job Location<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+      <View style={{margin: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Preferred Job Location
+          <Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
           <TextInput
             placeholder="Enter Preferred Job Location"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
             cursorColor={Colors.primaryColor}
             value={preferredLocation}
-            onChangeText={(val) => setPreferredLocation(val)}
+            onChangeText={val => setPreferredLocation(val)}
           />
         </View>
       </View>
@@ -353,18 +343,18 @@ const RegisterScreen = ({ navigation }) => {
 
   function preferredJobTypeInfo() {
     return (
-      <View style={{ margin: Sizes.fixPadding * 2.0 }}>
-        <Text style={{ ...Fonts.grayColor16Regular }}>
-          Preferred Job Type<Text style={{ ...Fonts.redColor15SemiBold }}>*</Text>
+      <View style={{margin: Sizes.fixPadding * 2.0}}>
+        <Text style={{...Fonts.grayColor16Regular}}>
+          Preferred Job Type<Text style={{...Fonts.redColor15SemiBold}}>*</Text>
         </Text>
         <View style={CommonStyles.textFieldWrapper}>
           <TextInput
             placeholder="Enter Preferred Job Type"
             placeholderTextColor={Colors.grayColor}
-            style={{ ...Fonts.blackColor16Medium, height: 30.0, padding: 0 }}
+            style={{...Fonts.blackColor16Medium, height: 30.0, padding: 0}}
             cursorColor={Colors.primaryColor}
             value={preferredJobType}
-            onChangeText={(val) => setPreferredJobType(val)}
+            onChangeText={val => setPreferredJobType(val)}
           />
         </View>
       </View>
@@ -377,13 +367,12 @@ const RegisterScreen = ({ navigation }) => {
         style={{
           margin: Sizes.fixPadding * 2.0,
           justifyContent: 'center',
-        }}
-      >
+        }}>
         <MaterialIcons
           name="keyboard-backspace"
           size={26}
           color={Colors.blackColor}
-          style={{ position: 'absolute', zIndex: 100 }}
+          style={{position: 'absolute', zIndex: 100}}
           onPress={() => {
             navigation.pop();
           }}
