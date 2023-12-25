@@ -4,95 +4,142 @@ import {
   TouchableOpacity,
   View,
   Image,
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Colors,
   CommonStyles,
   Fonts,
   Sizes,
   screenWidth,
-  TextInput
 } from '../../constants/styles';
 import {Text} from '../../components/commonText';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Overlay} from '@rneui/themed';
 import MyStatusBar from '../../components/myStatusBar';
+import {GoogleGenerativeAI} from '@google/generative-ai';
+import {useCandidateContext} from '../../context/candidateProvider';
 
 const requirementsList = [
-  'Excepteur sint occaecat cupidatat non proident.',
-  'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.',
-  'Ut enim ad minima veniam, quis nostrum.',
-  'At vero eos et accusamus et iusto odio dignissimo.',
-  'Lorem ipsum dolor sit amet, consectetur.',
+  'Collaborate with cross-functional teams to design, develop, and maintain mobile applications using React Native.',
+  'Identify and fix bugs and performance bottlenecks.',
+  'Work closely with the product team to understand requirements and provide technical solutions.',
 ];
 
-const ChatbotPopup = ({ onClose }) => {
-  const chatMessages = [
-    { id: 1, text: 'Hello! How can I help you today?' },
-    { id: 2, text: 'I can provide information about job opportunities.' },
-    { id: 3, text: 'Feel free to ask me anything!' },
-  ];
+const ChatbotPopup = ({onClose}) => {
+  const {candidateData} = useCandidateContext();
+  const [loading, setLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      text: 'Hello! How can I help you prepare for your job interview?',
+      isBot: true,
+    },
+  ]);
+  const [userInput, setUserInput] = useState('');
+  const scrollViewRef = useRef();
+  const genAI = new GoogleGenerativeAI(
+    'AIzaSyA2asrrbHrBS62ETYhBFyndG1svdOoZLEk',
+  );
+
+  const handleSend = async () => {
+    setLoading(true);
+    
+    if (userInput.trim() === '') {
+      return;
+    }
+
+    const newUserMessage = {
+      id: chatMessages.length + 1,
+      text: userInput,
+      isBot: false,
+    };
+    chatMessages.push(newUserMessage);
+    console.log(chatMessages)
+    setUserInput('');
+
+    try {
+      const model = genAI.getGenerativeModel({model: 'gemini-pro'});
+      const result = await model.generateContent(userInput);
+      const response = await result.response;
+      const botMessage = {
+        id: chatMessages.length + 1,
+        text: response.text(),
+        isBot: true,
+      };
+      chatMessages.push(botMessage);
+      setLoading(false);
+      setTimeout(() => {
+        scrollViewRef.current.scrollToEnd({animated: true});
+      }, 100);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Overlay
-      isVisible={true} // You can use a state variable to control visibility
+      isVisible={true}
       onBackdropPress={onClose}
-      overlayStyle={CommonStyles.dialogStyle}
-    >
-      <View style={{ padding: 20 }}>
-        {/* Chat messages */}
-        <ScrollView>
-          {chatMessages.map((message) => (
+      overlayStyle={styles.overlayStyle}>
+      <View style={styles.container}>
+        <ScrollView
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({animated: true})
+          }
+          style={styles.chatContainer}>
+          {chatMessages.map(message => (
             <View
               key={message.id}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'flex-start',
-                marginBottom: 10,
-              }}
-            >
+              style={[
+                styles.messageContainer,
+                message.isBot
+                  ? styles.botMessageContainer
+                  : styles.userMessageContainer,
+              ]}>
+              {message.isBot ? (
+                <Image
+                  source={require('../../assets/images/app_icon.png')}
+                  style={styles.avatar}
+                />
+              ) : null}
               <View
-                style={{
-                  backgroundColor: '#e0e0e0',
-                  padding: 10,
-                  borderRadius: 8,
-                }}
-              >
-                <Text>{message.text}</Text>
+                style={[
+                  message.isBot ? styles.botMessage : styles.userMessage,
+                  {maxWidth: screenWidth * 0.6},
+                ]}>
+                <Text style={styles.messageText}>{message.text}</Text>
               </View>
+              {!message.isBot ? (
+                <Image
+                  source={{uri: candidateData.profilePic}}
+                  style={styles.avatar}
+                />
+              ) : null}
             </View>
           ))}
         </ScrollView>
 
-        {/* Input area (if you want to add user input) */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 10,
-          }}
-        >
+        <View style={styles.inputContainer}>
           <TextInput
-            style={{
-              flex: 1,
-              borderWidth: 1,
-              borderColor: '#ccc',
-              borderRadius: 5,
-              padding: 8,
-            }}
+            style={styles.input}
             placeholder="Type your message..."
+            placeholderTextColor="#888"
+            value={userInput}
+            onChangeText={text => setUserInput(text)}
           />
-          <TouchableOpacity
-            style={{
-              marginLeft: 10,
-              backgroundColor: '#3498db',
-              padding: 10,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: 'white' }}>Send</Text>
+          <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+            {loading ? (
+              <ActivityIndicator size="small" color={Colors.whiteColor} />
+            ) : (
+              <Ionicons name="send" size={20} color="white" />
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -100,8 +147,7 @@ const ChatbotPopup = ({ onClose }) => {
   );
 };
 
-
-const ChatbotButton = ({ onPress }) => {
+const ChatbotButton = ({onPress}) => {
   return (
     <TouchableOpacity
       style={{
@@ -109,11 +155,10 @@ const ChatbotButton = ({ onPress }) => {
         bottom: 50,
         right: 16,
         backgroundColor: Colors.primaryColor,
-        borderRadius: 50, 
+        borderRadius: 50,
         padding: 15,
       }}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       <Ionicons name="chatbox" size={30} color="white" />
     </TouchableOpacity>
   );
@@ -146,13 +191,8 @@ const JobDetailScreen = ({navigation}) => {
           {applyButton()}
         </ScrollView>
         {uploadResumeDialog()}
-        {showChatbot && (
-        // Render your chatbot pop-up here
-        // You can use a component similar to your uploadResumeDialog
-        // and customize it for the chatbot
-        <ChatbotPopup onClose={closeChatbot} />
-      )}
-      <ChatbotButton onPress={openChatbot} />
+        {showChatbot && <ChatbotPopup onClose={closeChatbot} />}
+        <ChatbotButton onPress={openChatbot} />
       </View>
     </View>
   );
@@ -259,9 +299,7 @@ const JobDetailScreen = ({navigation}) => {
             textAlign: 'justify',
             marginTop: Sizes.fixPadding,
           }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut semper
-          habitant nulla mauris. Amet, tincidunt a amet, et aliquam in habitant
-          dictum. Quis ac et proin quis.
+          Exquisite Technologies is seeking a skilled React Native Developer to join our dynamic team. As a React Native Developer, you will be responsible for developing and maintaining high-quality mobile applications for both iOS and Android platforms. The ideal candidate should have a solid understanding of mobile application development, React Native framework, and a passion for creating innovative and user-friendly mobile experiences.
         </Text>
       </View>
     );
@@ -299,7 +337,7 @@ const JobDetailScreen = ({navigation}) => {
         </View>
         <View style={{...styles.rowSpaceBetween}}>
           <Text style={{...Fonts.grayColor16Regular, flex: 1}}>Location</Text>
-          <Text style={{...Fonts.primaryColor16Medium}}>California, USA</Text>
+          <Text style={{...Fonts.primaryColor16Medium}}>Lahore, Pk</Text>
         </View>
       </View>
     );
@@ -309,12 +347,12 @@ const JobDetailScreen = ({navigation}) => {
     return (
       <View style={styles.serviceProviderWrapper}>
         <Image
-          source={require('../../assets/images/jobs/job1.png')}
+          source={require('../../assets/images/icons/react.png')}
           style={styles.sourceLogoStyle}
         />
         <View style={{flex: 1, marginLeft: Sizes.fixPadding * 2.0}}>
           <Text numberOfLines={1} style={{...Fonts.blackColor20SemiBold}}>
-            Sr. UI/UX Designer
+            React Native Developer
           </Text>
           <Text
             style={{
@@ -402,5 +440,81 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.fixPadding - 2.0,
     paddingHorizontal: Sizes.fixPadding + 8.0,
     marginTop: Sizes.fixPadding + 5.0,
+  },
+  overlayStyle: {
+    padding: Sizes.fixPadding * 2,
+    borderRadius: Sizes.fixPadding,
+  },
+  container: {
+    flex: 1,
+    width: screenWidth * 0.8,
+    maxHeight: screenWidth * 1.2,
+  },
+  chatContainer: {
+    flex: 1,
+    width: screenWidth * 0.8,
+    maxHeight: 600,
+  },
+
+  messageText: {
+    color: 'white',
+    fontSize: Fonts.medium,
+    flexWrap: 'wrap',
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+    flex: 1,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  botMessage: {
+    backgroundColor: Colors.primaryColor,
+    padding: Sizes.fixPadding * 1.2,
+    borderRadius: Sizes.fixPadding,
+  },
+  userMessage: {
+    backgroundColor: Colors.pinkColor,
+    padding: Sizes.fixPadding,
+    borderRadius: Sizes.fixPadding,
+  },
+  userMessageContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  botMessageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: Sizes.fixPadding,
+  },
+  input: {
+    flex: 1,
+    color: Colors.blackColor,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: Sizes.fixPadding,
+    padding: Sizes.fixPadding,
+    marginRight: Sizes.fixPadding,
+  },
+  sendButton: {
+    backgroundColor: Colors.primaryColor,
+    padding: Sizes.fixPadding,
+    borderRadius: Sizes.fixPadding,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
