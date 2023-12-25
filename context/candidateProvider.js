@@ -17,7 +17,6 @@ export const CandidateProvider = ({ children }) => {
 };
 
 export const useCandidateContext = () => {
-  console.log('useCandidateContext', CandidateContext);
   const context = useContext(CandidateContext);
   if (!context) {
     throw new Error('useCandidateContext must be used within a CandidateProvider');

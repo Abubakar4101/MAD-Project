@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -5,7 +6,12 @@ import {
   View,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import { Text } from '../../components/commonText';
+import { Overlay } from '@rneui/themed';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { GiftedChat } from 'react-native-gifted-chat';
+import MyStatusBar from '../../components/myStatusBar';
 import {
   Colors,
   CommonStyles,
@@ -13,11 +19,6 @@ import {
   Sizes,
   screenWidth,
 } from '../../constants/styles';
-import {Text} from '../../components/commonText';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {Overlay} from '@rneui/themed';
-import MyStatusBar from '../../components/myStatusBar';
 
 const requirementsList = [
   'Excepteur sint occaecat cupidatat non proident.',
@@ -29,11 +30,25 @@ const requirementsList = [
 
 const JobDetailScreen = ({navigation}) => {
   const [showUploadDialog, setshowUploadDialog] = useState(false);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  const handleUserMessage = (messages) => {
+    setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
+  };
+
+  const openChatbot = () => {
+    setShowChatbot(true);
+  };
+
+  const closeChatbot = () => {
+    setShowChatbot(false);
+  };
 
   return (
-    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
+    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
       <MyStatusBar />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {header()}
         <ScrollView showsVerticalScrollIndicator={false}>
           {serviceProviderInfo()}
@@ -43,8 +58,35 @@ const JobDetailScreen = ({navigation}) => {
           {divider()}
           {requirementsInfo()}
           {applyButton()}
+          <TouchableOpacity
+            style={styles.chatbotButton}
+            onPress={openChatbot}>
+            <Text style={styles.chatbotButtonText}>Chat with Chatbot</Text>
+          </TouchableOpacity>
         </ScrollView>
         {uploadResumeDialog()}
+        {showChatbot && (
+          <Overlay
+            isVisible={showChatbot}
+            onBackdropPress={closeChatbot}
+            overlayStyle={CommonStyles.dialogStyle}>
+            <View style={{ flex: 1 }}>
+              <MaterialIcons
+                name="keyboard-backspace"
+                size={26}
+                color={Colors.blackColor}
+                onPress={closeChatbot}
+                style={styles.chatbotCloseIcon}
+              />
+              <GiftedChat
+                messages={messages}
+                onSend={(messages) => handleUserMessage(messages)}
+                user={{ _id: 1 }}
+                isTyping={true}
+              />
+            </View>
+          </Overlay>
+        )}
       </View>
     </View>
   );
@@ -294,5 +336,18 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.fixPadding - 2.0,
     paddingHorizontal: Sizes.fixPadding + 8.0,
     marginTop: Sizes.fixPadding + 5.0,
+  },
+  chatbotButton: {
+    ...CommonStyles.buttonStyle,
+    margin: Sizes.fixPadding * 2.0,
+  },
+  chatbotButtonText: {
+    ...Fonts.whiteColor18SemiBold,
+    textAlign: 'center',
+  },
+  chatbotCloseIcon: {
+    position: 'absolute',
+    top: Sizes.fixPadding * 2,
+    left: Sizes.fixPadding * 2,
   },
 });

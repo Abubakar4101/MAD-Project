@@ -18,15 +18,10 @@ import {BottomSheet} from '@rneui/themed';
 import MyStatusBar from '../../components/myStatusBar';
 import {useCandidateContext} from '../../context/candidateProvider';
 
-const profileWebsites = [
-  'https://dribble.com/samanthasmith-85r66s4g9',
-  'https://behance.net/samanthasmith',
-];
-
 const skillsList = [
-  require('../../assets/images/icons/adobe_logo.png'),
-  require('../../assets/images/icons/adobexd_logo.png'),
-  require('../../assets/images/icons/photoshop_logo.png'),
+  require('../../assets/images/icons/react.png'),
+  require('../../assets/images/icons/next.png'),
+  require('../../assets/images/icons/node.png'),
   require('../../assets/images/icons/figma_logo.png'),
 ];
 
@@ -34,14 +29,14 @@ const workExperiencesList = [
   {
     id: '1',
     serviceLogo: require('../../assets/images/jobs/job6.png'),
-    post: 'Sr. UI/UX Designer (Team Lead)',
+    post: 'Full Stack Developer',
     serviceProvider: 'Infosys Technologies',
-    experience: '2019 Dec - Present (2y, 4m)',
+    experience: '2022 Dec - Present (2y, 4m)',
   },
   {
     id: '2',
     serviceLogo: require('../../assets/images/jobs/job5.png'),
-    post: 'Jr. UI/UX Designer',
+    post: 'Jr. React Native Developer',
     serviceProvider: 'Android',
     experience: '2018 Aug - 2019 Dec  (1y, 6m)',
   },
@@ -259,11 +254,14 @@ const ProfileScreen = ({navigation}) => {
           <Text
             numberOfLines={readMore ? 0 : 3}
             style={{...Fonts.grayColor15Regular}}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet sit
-            ullamcorper quisque eu sollicitudin rhoncus non augue. Sit magna vel
-            magna rhoncus Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Amet sit ullamcorper quisque eu sollicitudin rhoncus non
-            augue. Sit magna vel magna rhoncus
+            Experienced Full Stack Developer with over 2 years of expertise in
+            web and mobile technologies, including Next.js, Node.js, MongoDB,
+            and React Native. Proven track record of successfully delivering
+            high-quality projects in a fast paced environment. Adept at
+            collaborating with cross-functional teams to create efficient and
+            scalable solutions. Led the development of web and mobile
+            applications, demonstrating proficiency in both front-end and
+            backend technologies.
           </Text>
           <Text
             onPress={() => setreadMore(!readMore)}
@@ -289,7 +287,7 @@ const ProfileScreen = ({navigation}) => {
                 flex: 1,
                 marginHorizontal: Sizes.fixPadding - 5.0,
               }}>
-              4+ years experience
+              3+ years experience
             </Text>
           </View>
           <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
@@ -305,7 +303,7 @@ const ProfileScreen = ({navigation}) => {
                 flex: 1,
                 marginLeft: Sizes.fixPadding - 5.0,
               }}>
-              California, USA
+              {candidateData.preferredLocation}, Pk
             </Text>
           </View>
         </View>
@@ -373,16 +371,13 @@ const ProfileScreen = ({navigation}) => {
             }}>
             Website
           </Text>
-          {profileWebsites.map((item, index) => (
-            <Text
-              key={`${index}`}
-              style={{
-                ...Fonts.blueColor15Regular,
-                marginTop: Sizes.fixPadding - 7.0,
-              }}>
-              {item}
-            </Text>
-          ))}
+          <Text
+            style={{
+              ...Fonts.blueColor15Regular,
+              marginTop: Sizes.fixPadding - 7.0,
+            }}>
+            {candidateData.websites.websiteUrl}
+          </Text>
         </View>
       </View>
     );
@@ -411,7 +406,9 @@ const ProfileScreen = ({navigation}) => {
             />
           </View>
           <View>
-            <Text style={{...Fonts.whiteColor19SemiBold}}>{candidateData.name}</Text>
+            <Text style={{...Fonts.whiteColor19SemiBold}}>
+              {candidateData.name}
+            </Text>
             <Text
               style={{
                 ...Fonts.whiteColor16Medium,

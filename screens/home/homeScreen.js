@@ -14,27 +14,25 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {Text} from '../../components/commonText';
-import {getJobTypes} from '../../services/openAi';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import {useCandidateContext} from '../../context/candidateProvider';
 import {Snackbar} from 'react-native-paper';
 import MyStatusBar from '../../components/myStatusBar';
 import axios from 'axios';
 
 const apiUrl = 'https://jsearch.p.rapidapi.com/search';
+const genAI = new GoogleGenerativeAI("AIzaSyA2asrrbHrBS62ETYhBFyndG1svdOoZLEk");
 
 const headers = {
-  'X-RapidAPI-Key': '8a1326e09amshb6fa253ec61c44ap1a0580jsn385ebe3bbb1d',
+  'X-RapidAPI-Key': 'b1eacdb883mshe12d9f17d4df75ep16f091jsn038f41c0be55',
   'X-RapidAPI-Host': 'jsearch.p.rapidapi.com',
 };
 
 const HomeScreen = ({navigation}) => {
   const {candidateData} = useCandidateContext();
-  
-  useEffect(() => {
-    console.log('candidateData from home', candidateData);
-  }, [candidateData]);
 
   const [selectedJobTypeIndex, setselectedJobTypeIndex] = useState(0);
+  const [selectedJobType, setselectedJobType] = useState(candidateData.preferredJobType);
   const [jobData, setjobData] = useState([]);
   const [showSnackBar, setshowSnackBar] = useState(false);
   const [snackBarMsg, setsnackBarMsg] = useState('');
@@ -54,19 +52,33 @@ const HomeScreen = ({navigation}) => {
   }, [onRefresh]);
 
   useEffect(() => {
-    getJobTypes().then((jobTypes) => {
-      setJobsTypesList(jobTypes);
-    });
-    fetchJobData();
-  }, [onRefresh]);
+    const fetchJobTypes = async () => {
+      try {
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        const prompt = `I am building a job seeker app. I have to show the related job categories based on preferred job titles. You have to give me the 5 categories of ${candidateData.preferredJobType} in this format: "<category1>", "<category2>", "<category3>", "<category4>", "<category5>". Note: just write the categories, no numbering, Because from this I want to initailize the array.`;
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        const jobTypes = text.split(',').map(item => item.trim());
+        setJobsTypesList(jobTypes);
+      } catch (error) {
+        console.error('Error fetching job types:', error);
+      }
+    };
+
+    fetchJobTypes();
+  }, []);
+
 
   const fetchJobData = async () => {
     try {
       setIsLoading(true);
+      console.log(selectedJobType);
       const response = await axios.get(apiUrl, {
         params: {
-          query: candidateData.preferredJobType,
-          page: '1',
+          query: selectedJobType,
+          page: '3',
           num_pages: '1',
         },
         headers: headers,
@@ -180,7 +192,7 @@ const HomeScreen = ({navigation}) => {
                       />
                       <Text style={{...Fonts.primaryColor16SemiBold}}>
                         {item.job_min_salary
-                          ? `$${item.job_min_salary}/Mo`
+                          ? `$${item.job_min_salary}`
                           : 'Salary TBD'}
                       </Text>
                     </View>
@@ -211,7 +223,11 @@ const HomeScreen = ({navigation}) => {
     const renderItem = ({item, index}) => (
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => setselectedJobTypeIndex(index)}
+        onPress={() => {
+          setselectedJobTypeIndex(index)
+          setselectedJobType(item);
+          fetchJobData();
+        }}
         style={{
           backgroundColor:
             selectedJobTypeIndex === index

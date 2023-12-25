@@ -9,43 +9,47 @@ import {
 import React, {useState} from 'react';
 import {Colors, CommonStyles, Sizes, Fonts} from '../../constants/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {BottomSheet} from '@rneui/themed';
 import {Text} from '../../components/commonText';
 import MyStatusBar from '../../components/myStatusBar';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {useCandidateContext} from '../../context/candidateProvider';
 
-const websiteTypesList = [
-  'Personal',
-  'Company',
-  'Blog',
-  'RSS Feed',
-  'Portfolio',
-  'Other',
-];
+const websiteTypesList = ['Personal', 'Company', 'Blog', 'Portfolio', 'Other'];
 
-const websitesList = [
-  {
-    id: '1',
-    websiteUrl: 'https://dribble.com/samanthasmith-85r66s4g9',
-    websiteType: websiteTypesList[4],
-  },
-  {
-    id: '2',
-    websiteUrl: 'https://behance.net/samanthasmith',
-    websiteType: websiteTypesList[4],
-  },
-];
 
 const EditContactInfoScreen = ({navigation}) => {
-  const {candidateData} = useCandidateContext();
+  const {candidateData, setCandidate} = useCandidateContext();
 
   const [email, setemail] = useState(candidateData.email);
   const [mobileNumber, setmobileNumber] = useState(candidateData.mobile);
-  const [websites, setwebsites] = useState(websitesList);
+  const [websites, setwebsites] = useState(candidateData.websites || {
+    websiteUrl: '',
+    websiteType: '',
+  });
   const [showWebsiteTypeSheet, setshowWebsiteTypeSheet] = useState(false);
   const [selectedWebsiteType, setselectedWebsiteType] = useState('');
-  const [selectedItemId, setselectedItemId] = useState('');
+
+  function handleSave() {
+    firestore()
+      .collection('candidates')
+      .doc(auth().currentUser.uid)
+      .update({
+        ...candidateData,
+        email: email,
+        mobile: mobileNumber,
+        websites: websites,
+      });
+
+      setCandidate({
+      ...candidateData,
+      email: email,
+      mobile: mobileNumber,
+      websites: websites,
+    });
+    navigation.pop();
+  }
 
   return (
     <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
@@ -69,7 +73,7 @@ const EditContactInfoScreen = ({navigation}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => navigation.pop()}
+        onPress={handleSave}
         style={{...CommonStyles.buttonStyle, margin: Sizes.fixPadding * 2.0}}>
         <Text style={{...Fonts.whiteColor18SemiBold}}>Save</Text>
       </TouchableOpacity>
@@ -77,15 +81,10 @@ const EditContactInfoScreen = ({navigation}) => {
   }
 
   function updateWebsites({websiteType}) {
-    const copyData = websites;
-    const newData = copyData.map(item => {
-      if (item.id === selectedItemId) {
-        return {...item, websiteType: websiteType};
-      } else {
-        return item;
-      }
-    });
-    setwebsites(newData);
+    setwebsites(prevWebsites => ({
+      ...prevWebsites,
+      websiteType: websiteType,
+    }));
     setshowWebsiteTypeSheet(false);
   }
 
@@ -149,61 +148,60 @@ const EditContactInfoScreen = ({navigation}) => {
             style={{...Fonts.blackColor18SemiBold, flex: 1}}>
             Website
           </Text>
-          <Text style={{...Fonts.primaryColor16SemiBold}}>+ Add Website</Text>
         </View>
-        {websites.map(item => (
-          <View
-            key={`${item.id}`}
-            style={{marginBottom: Sizes.fixPadding * 2.0}}>
-            <View>
-              <View style={styles.rowSpaceBetween}>
-                <Text style={{...Fonts.grayColor16Regular}}>Website URL</Text>
-                <FontAwesome
-                  name="trash"
-                  size={18}
-                  color={Colors.grayColor}
-                  style={{opacity: 0.7}}
-                />
-              </View>
-              <View
-                style={{
-                  ...CommonStyles.textFieldWrapper,
-                  paddingVertical: Sizes.fixPadding,
-                }}>
-                <Text
-                  numberOfLines={1}
-                  style={{...Fonts.blackColor16Medium, lineHeight: 30.0}}>
-                  {item.websiteUrl}
-                </Text>
-              </View>
+        <View style={{marginBottom: Sizes.fixPadding * 2.0}}>
+        <View>
+            <View style={styles.rowSpaceBetween}>
+              <Text style={{ ...Fonts.grayColor16Regular }}>Website URL</Text>
             </View>
-            <View style={{marginTop: Sizes.fixPadding * 2.0}}>
-              <Text style={{...Fonts.grayColor16Regular}}>Website Type</Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {
-                  setselectedWebsiteType(item.websiteType);
-                  setselectedItemId(item.id);
-                  setshowWebsiteTypeSheet(true);
-                }}
+            <View
+              style={{
+                ...CommonStyles.textFieldWrapper,
+                paddingVertical: Sizes.fixPadding,
+              }}>
+              <TextInput
+                placeholder="Enter Website URL"
+                placeholderTextColor={Colors.grayColor}
                 style={{
-                  ...CommonStyles.textFieldWrapper,
-                  ...styles.rowSpaceBetween,
-                }}>
-                <Text
-                  numberOfLines={1}
-                  style={{...Fonts.blackColor16Medium, flex: 1}}>
-                  {item.websiteType}
-                </Text>
-                <MaterialIcons
-                  name="arrow-drop-down"
-                  size={24}
-                  color={Colors.blackColor}
-                />
-              </TouchableOpacity>
+                  ...Fonts.blackColor16Medium,
+                  height: 30.0,
+                  padding: 0,
+                }}
+                cursorColor={Colors.primaryColor}
+                value={websites.websiteUrl}
+                onChangeText={(val) =>
+                  setwebsites((prevWebsites) => ({
+                    ...prevWebsites,
+                    websiteUrl: val,
+                  }))
+                }
+                keyboardType="url"
+              />
             </View>
           </View>
-        ))}
+          <View style={{ marginTop: Sizes.fixPadding * 2.0 }}>
+            <Text style={{ ...Fonts.grayColor16Regular }}>Website Type</Text>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              placeholder="Select Website Type"
+              onPress={() => setshowWebsiteTypeSheet(true)}
+              style={{
+                ...CommonStyles.textFieldWrapper,
+                ...styles.rowSpaceBetween,
+              }}>
+              <Text
+                numberOfLines={1}
+                style={{ ...Fonts.blackColor16Medium, flex: 1 }}>
+                {websites.websiteType || 'Select Website Type'}
+              </Text>
+              <MaterialIcons
+                name="arrow-drop-down"
+                size={24}
+                color={Colors.blackColor}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
