@@ -14,14 +14,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {Text} from '../../components/commonText';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {GoogleGenerativeAI} from '@google/generative-ai';
 import {useCandidateContext} from '../../context/candidateProvider';
 import {Snackbar} from 'react-native-paper';
 import MyStatusBar from '../../components/myStatusBar';
 import axios from 'axios';
 
 const apiUrl = 'https://jsearch.p.rapidapi.com/search';
-const genAI = new GoogleGenerativeAI("AIzaSyA2asrrbHrBS62ETYhBFyndG1svdOoZLEk");
+const genAI = new GoogleGenerativeAI('AIzaSyA2asrrbHrBS62ETYhBFyndG1svdOoZLEk');
 
 const headers = {
   'X-RapidAPI-Key': 'b1eacdb883mshe12d9f17d4df75ep16f091jsn038f41c0be55',
@@ -32,7 +32,9 @@ const HomeScreen = ({navigation}) => {
   const {candidateData} = useCandidateContext();
 
   const [selectedJobTypeIndex, setselectedJobTypeIndex] = useState(0);
-  const [selectedJobType, setselectedJobType] = useState(candidateData.preferredJobType);
+  const [selectedJobType, setselectedJobType] = useState(
+    candidateData.preferredJobType,
+  );
   const [jobData, setjobData] = useState([]);
   const [showSnackBar, setshowSnackBar] = useState(false);
   const [snackBarMsg, setsnackBarMsg] = useState('');
@@ -40,28 +42,28 @@ const HomeScreen = ({navigation}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [jobsTypesList, setJobsTypesList] = useState([]);
 
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    fetchJobData();
+    fetchJobData(candidateData.preferredJobType);
     setRefreshing(false);
   }, []);
 
   useEffect(() => {
-    fetchJobData();
+    fetchJobData(candidateData.preferredJobType);
   }, [onRefresh]);
 
   useEffect(() => {
     const fetchJobTypes = async () => {
       try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({model: 'gemini-pro'});
 
         const prompt = `I am building a job seeker app. I have to show the related job categories based on preferred job titles. You have to give me the 5 categories of ${candidateData.preferredJobType} in this format: "<category1>", "<category2>", "<category3>", "<category4>", "<category5>". Note: just write the categories, no numbering, Because from this I want to initailize the array.`;
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
         const jobTypes = text.split(',').map(item => item.trim());
-        setJobsTypesList(jobTypes);
+        const updatedJobTypes = [candidateData.preferredJobType, ...jobTypes];
+        setJobsTypesList(updatedJobTypes);
       } catch (error) {
         console.error('Error fetching job types:', error);
       }
@@ -70,14 +72,12 @@ const HomeScreen = ({navigation}) => {
     fetchJobTypes();
   }, []);
 
-
-  const fetchJobData = async () => {
+  const fetchJobData = async JobType => {
     try {
       setIsLoading(true);
-      console.log(selectedJobType);
       const response = await axios.get(apiUrl, {
         params: {
-          query: selectedJobType,
+          query: JobType,
           page: '3',
           num_pages: '1',
         },
@@ -131,75 +131,129 @@ const HomeScreen = ({navigation}) => {
               <ActivityIndicator size="large" color={Colors.primaryColor} />
             </View>
           ) : (
-            <FlatList
-              keyExtractor={item => item.job_id}
-              data={jobData}
-              scrollEnabled={false}
-              renderItem={({item}) =>
-                item.employer_logo && (
-                  <TouchableOpacity
-                    key={item.job_id}
-                    activeOpacity={0.7}
+            <>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => {
+                  navigation.push('JobDetail');
+                }}
+                style={styles.jobWrapStyle}>
+                <View style={{flexDirection: 'row', flex: 1}}>
+                  <Image
+                    source={require('../../assets/images/icons/react.png')}
+                    style={styles.sourceLogoStyle}
+                  />
+                  <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
+                    <Text
+                      numberOfLines={1}
+                      style={{...Fonts.blackColor18SemiBold}}>
+                      Web App Developer
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        ...Fonts.blackColor15Regular,
+                        marginBottom: Sizes.fixPadding - 8.0,
+                        marginTop: Sizes.fixPadding - 5.0,
+                      }}>
+                     Jacobs
+                    </Text>
+                    <Text
+                      numberOfLines={1}
+                      style={{...Fonts.grayColor13Regular}}>
+                      FULLTIME
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    height: 65.0,
+                    alignItems: 'flex-end',
+                    justifyContent: 'space-between',
+                  }}>
+                  <MaterialIcons
+                    name='bookmark-border'
+                    color={Colors.primaryColor}
+                    size={24}
                     onPress={() => {
-                      navigation.push('JobDetail');
+                      updateJobData({id: '123'});
                     }}
-                    style={styles.jobWrapStyle}>
-                    <View style={{flexDirection: 'row', flex: 1}}>
-                      <Image
-                        source={{uri: item.employer_logo}}
-                        style={styles.sourceLogoStyle}
-                      />
-                      <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
-                        <Text
-                          numberOfLines={1}
-                          style={{...Fonts.blackColor18SemiBold}}>
-                          {item.job_title}
-                        </Text>
-                        <Text
-                          numberOfLines={1}
-                          style={{
-                            ...Fonts.blackColor15Regular,
-                            marginBottom: Sizes.fixPadding - 8.0,
-                            marginTop: Sizes.fixPadding - 5.0,
-                          }}>
-                          {item.employer_name}
-                        </Text>
-                        <Text
-                          numberOfLines={1}
-                          style={{...Fonts.grayColor13Regular}}>
-                          {item.job_city}, {item.job_state} •{' '}
-                          {item.job_employment_type}
+                  />
+                  <Text style={{...Fonts.primaryColor16SemiBold}}>
+                    Salary TBD
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <FlatList
+                keyExtractor={item => item.job_id}
+                data={jobData}
+                scrollEnabled={false}
+                renderItem={({item}) =>
+                  item.employer_logo && (
+                    <TouchableOpacity
+                      key={item.job_id}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        navigation.push('JobDetail');
+                      }}
+                      style={styles.jobWrapStyle}>
+                      <View style={{flexDirection: 'row', flex: 1}}>
+                        <Image
+                          source={{uri: item.employer_logo}}
+                          style={styles.sourceLogoStyle}
+                        />
+                        <View style={{flex: 1, marginLeft: Sizes.fixPadding}}>
+                          <Text
+                            numberOfLines={1}
+                            style={{...Fonts.blackColor18SemiBold}}>
+                            {item.job_title}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              ...Fonts.blackColor15Regular,
+                              marginBottom: Sizes.fixPadding - 8.0,
+                              marginTop: Sizes.fixPadding - 5.0,
+                            }}>
+                            {item.employer_name}
+                          </Text>
+                          <Text
+                            numberOfLines={1}
+                            style={{...Fonts.grayColor13Regular}}>
+                            {item.job_city}, {item.job_state} •{' '}
+                            {item.job_employment_type}
+                          </Text>
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          height: 65.0,
+                          alignItems: 'flex-end',
+                          justifyContent: 'space-between',
+                        }}>
+                        <MaterialIcons
+                          name={
+                            item.job_apply_is_direct
+                              ? 'bookmark'
+                              : 'bookmark-border'
+                          }
+                          color={Colors.primaryColor}
+                          size={24}
+                          onPress={() => {
+                            updateJobData({id: item.job_id});
+                          }}
+                        />
+                        <Text style={{...Fonts.primaryColor16SemiBold}}>
+                          {item.job_min_salary
+                            ? `$${item.job_min_salary}`
+                            : 'Salary TBD'}
                         </Text>
                       </View>
-                    </View>
-                    <View
-                      style={{
-                        height: 65.0,
-                        alignItems: 'flex-end',
-                        justifyContent: 'space-between',
-                      }}>
-                      <MaterialIcons
-                        name={
-                          item.job_apply_is_direct
-                            ? 'bookmark'
-                            : 'bookmark-border'
-                        }
-                        color={Colors.primaryColor}
-                        size={24}
-                        onPress={() => {
-                          updateJobData({id: item.job_id});
-                        }}
-                      />
-                      <Text style={{...Fonts.primaryColor16SemiBold}}>
-                        {item.job_min_salary
-                          ? `$${item.job_min_salary}`
-                          : 'Salary TBD'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )
-              }
-            />
+                    </TouchableOpacity>
+                  )
+                }
+              />
+            </>
           )}
         </ScrollView>
       </View>
@@ -224,9 +278,9 @@ const HomeScreen = ({navigation}) => {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          setselectedJobTypeIndex(index)
+          setselectedJobTypeIndex(index);
           setselectedJobType(item);
-          fetchJobData();
+          fetchJobData(item);
         }}
         style={{
           backgroundColor:
@@ -338,7 +392,7 @@ const HomeScreen = ({navigation}) => {
               flex: 1,
             }}>
             <Text numberOfLines={1} style={{...Fonts.blackColor20Bold}}>
-            Hello, {candidateData?.name || 'Guest'}!
+              Hello, {candidateData?.name || 'Guest'}!
             </Text>
             <Text
               style={{

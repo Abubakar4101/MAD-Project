@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,19 +5,20 @@ import {
   View,
   Image,
 } from 'react-native';
-import { Text } from '../../components/commonText';
-import { Overlay } from '@rneui/themed';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { GiftedChat } from 'react-native-gifted-chat';
-import MyStatusBar from '../../components/myStatusBar';
+import React, {useState} from 'react';
 import {
   Colors,
   CommonStyles,
   Fonts,
   Sizes,
   screenWidth,
+  TextInput
 } from '../../constants/styles';
+import {Text} from '../../components/commonText';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Overlay} from '@rneui/themed';
+import MyStatusBar from '../../components/myStatusBar';
 
 const requirementsList = [
   'Excepteur sint occaecat cupidatat non proident.',
@@ -28,27 +28,113 @@ const requirementsList = [
   'Lorem ipsum dolor sit amet, consectetur.',
 ];
 
+const ChatbotPopup = ({ onClose }) => {
+  const chatMessages = [
+    { id: 1, text: 'Hello! How can I help you today?' },
+    { id: 2, text: 'I can provide information about job opportunities.' },
+    { id: 3, text: 'Feel free to ask me anything!' },
+  ];
+
+  return (
+    <Overlay
+      isVisible={true} // You can use a state variable to control visibility
+      onBackdropPress={onClose}
+      overlayStyle={CommonStyles.dialogStyle}
+    >
+      <View style={{ padding: 20 }}>
+        {/* Chat messages */}
+        <ScrollView>
+          {chatMessages.map((message) => (
+            <View
+              key={message.id}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+                marginBottom: 10,
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: '#e0e0e0',
+                  padding: 10,
+                  borderRadius: 8,
+                }}
+              >
+                <Text>{message.text}</Text>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Input area (if you want to add user input) */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 10,
+          }}
+        >
+          <TextInput
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 5,
+              padding: 8,
+            }}
+            placeholder="Type your message..."
+          />
+          <TouchableOpacity
+            style={{
+              marginLeft: 10,
+              backgroundColor: '#3498db',
+              padding: 10,
+              borderRadius: 5,
+            }}
+          >
+            <Text style={{ color: 'white' }}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Overlay>
+  );
+};
+
+
+const ChatbotButton = ({ onPress }) => {
+  return (
+    <TouchableOpacity
+      style={{
+        position: 'absolute',
+        bottom: 50,
+        right: 16,
+        backgroundColor: Colors.primaryColor,
+        borderRadius: 50, 
+        padding: 15,
+      }}
+      onPress={onPress}
+    >
+      <Ionicons name="chatbox" size={30} color="white" />
+    </TouchableOpacity>
+  );
+};
+
 const JobDetailScreen = ({navigation}) => {
   const [showUploadDialog, setshowUploadDialog] = useState(false);
   const [showChatbot, setShowChatbot] = useState(false);
-  const [messages, setMessages] = useState([]);
 
-  const handleUserMessage = (messages) => {
-    setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
-  };
-
-  const openChatbot = () => {
+  function openChatbot() {
     setShowChatbot(true);
-  };
+  }
 
-  const closeChatbot = () => {
+  function closeChatbot() {
     setShowChatbot(false);
-  };
+  }
 
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.whiteColor }}>
+    <View style={{flex: 1, backgroundColor: Colors.whiteColor}}>
       <MyStatusBar />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         {header()}
         <ScrollView showsVerticalScrollIndicator={false}>
           {serviceProviderInfo()}
@@ -58,35 +144,15 @@ const JobDetailScreen = ({navigation}) => {
           {divider()}
           {requirementsInfo()}
           {applyButton()}
-          <TouchableOpacity
-            style={styles.chatbotButton}
-            onPress={openChatbot}>
-            <Text style={styles.chatbotButtonText}>Chat with Chatbot</Text>
-          </TouchableOpacity>
         </ScrollView>
         {uploadResumeDialog()}
         {showChatbot && (
-          <Overlay
-            isVisible={showChatbot}
-            onBackdropPress={closeChatbot}
-            overlayStyle={CommonStyles.dialogStyle}>
-            <View style={{ flex: 1 }}>
-              <MaterialIcons
-                name="keyboard-backspace"
-                size={26}
-                color={Colors.blackColor}
-                onPress={closeChatbot}
-                style={styles.chatbotCloseIcon}
-              />
-              <GiftedChat
-                messages={messages}
-                onSend={(messages) => handleUserMessage(messages)}
-                user={{ _id: 1 }}
-                isTyping={true}
-              />
-            </View>
-          </Overlay>
-        )}
+        // Render your chatbot pop-up here
+        // You can use a component similar to your uploadResumeDialog
+        // and customize it for the chatbot
+        <ChatbotPopup onClose={closeChatbot} />
+      )}
+      <ChatbotButton onPress={openChatbot} />
       </View>
     </View>
   );
@@ -336,18 +402,5 @@ const styles = StyleSheet.create({
     paddingVertical: Sizes.fixPadding - 2.0,
     paddingHorizontal: Sizes.fixPadding + 8.0,
     marginTop: Sizes.fixPadding + 5.0,
-  },
-  chatbotButton: {
-    ...CommonStyles.buttonStyle,
-    margin: Sizes.fixPadding * 2.0,
-  },
-  chatbotButtonText: {
-    ...Fonts.whiteColor18SemiBold,
-    textAlign: 'center',
-  },
-  chatbotCloseIcon: {
-    position: 'absolute',
-    top: Sizes.fixPadding * 2,
-    left: Sizes.fixPadding * 2,
   },
 });
