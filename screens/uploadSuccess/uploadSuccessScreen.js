@@ -90,8 +90,6 @@ const UploadSuccessScreen = ({navigation}) => {
             marginTop: Sizes.fixPadding,
             textAlign: 'center',
           }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-          malesuada est commodo eu.
         </Text>
       </View>
     );
@@ -115,7 +113,7 @@ const UploadSuccessScreen = ({navigation}) => {
         />
         <View style={{flex: 1, marginLeft: Sizes.fixPadding * 2.0}}>
           <Text style={{...Fonts.blackColor18Medium}}>
-            Resume - Samantha.pdf
+            Resume - Abubakar.pdf
           </Text>
           <Text
             style={{
@@ -133,19 +131,19 @@ const UploadSuccessScreen = ({navigation}) => {
     return (
       <View style={styles.card}>
         <Image
-          source={require('../../assets/images/jobs/job1.png')}
+          source={require('../../assets/images/icons/react.png')}
           style={styles.sourceLogoStyle}
         />
         <View style={{flex: 1, marginLeft: Sizes.fixPadding * 2.0}}>
           <Text numberOfLines={1} style={{...Fonts.blackColor20SemiBold}}>
-            Sr. UI/UX Designer
+            React Native Developer
           </Text>
           <Text
             style={{
               ...Fonts.grayColor15Medium,
               marginTop: Sizes.fixPadding - 5.0,
             }}>
-            Aribnb
+            Jacob
           </Text>
         </View>
       </View>

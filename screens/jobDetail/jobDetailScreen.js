@@ -359,7 +359,7 @@ const JobDetailScreen = ({navigation}) => {
               ...Fonts.grayColor15Medium,
               marginTop: Sizes.fixPadding - 5.0,
             }}>
-            Aribnb
+            Jacob
           </Text>
         </View>
       </View>
